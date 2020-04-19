@@ -34,6 +34,9 @@ public class PasswordGenerate {
         CharacterRule splCharRule = new CharacterRule(specialChars);
         splCharRule.setNumberOfCharacters(numberOfspecialCase);
 
+        assert passwordLenght > (numberOfdigitalCase+numberOflowCase+numberOfspecialCase+numberOfupperCase) :
+                "Password length is too small";
+
         return gen.generatePassword(passwordLenght, splCharRule, lowerCaseRule,
                 upperCaseRule, digitRule);
     }

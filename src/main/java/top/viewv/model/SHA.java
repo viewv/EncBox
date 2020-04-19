@@ -9,6 +9,7 @@ public class SHA {
     public static byte[] digest(String filepath,String mode){
         int buff = 16384;
         try {
+            /* TODO change provider into an open-source one like Bouncy Castle or Commons Codec */
             MessageDigest hashSum;
             RandomAccessFile file = new RandomAccessFile(filepath, "r");
 
@@ -54,6 +55,7 @@ public class SHA {
 
             StringBuilder hexString = new StringBuilder();
 
+            //TODO: Fix bug, when hash is less then 10, will be no lead 0
             for (byte hash : partialHash) {
                 hexString.append(Integer.toHexString(0xFF & hash));
             }
