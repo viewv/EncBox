@@ -6,7 +6,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class SHA {
-    public static byte[] digest(String filepath,String mode){
+
+    /**
+     * Get SHA of one file
+     * @param mode
+     *  512/224 : SHA-512/224
+     *  512/226 : SHA-512/226
+     *  3/256   : SHA3-256
+     *  3/512   : SHA3-512
+     *  default : SHA-256
+     * @return
+     * if error return null else return a byte[]
+     * @exception IOException
+     * No file founded
+     *  */
+    public static byte[] digest(String filepath,String mode) throws IOException {
         int buff = 16384;
         try {
             /* TODO change provider into an open-source one like Bouncy Castle or Commons Codec */
@@ -71,7 +85,7 @@ public class SHA {
 
             return partialHash;
 
-        } catch (IOException | NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return null;
         }
