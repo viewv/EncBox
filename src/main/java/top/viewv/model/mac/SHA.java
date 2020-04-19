@@ -1,4 +1,4 @@
-package top.viewv.model;
+package top.viewv.model.mac;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

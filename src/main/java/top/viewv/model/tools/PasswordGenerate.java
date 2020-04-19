@@ -1,4 +1,4 @@
-package top.viewv.model;
+package top.viewv.model.tools;
 
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
