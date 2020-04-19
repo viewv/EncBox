@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.util.Objects;
 
 public class MainApp extends Application {
@@ -19,7 +20,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new
                     FXMLLoader(Objects.requireNonNull(getClass()).getClassLoader()
                     .getResource("data/ui/Main.fxml"));
-            System.out.println("Loader Success");
+            System.out.println("Initial Success");
 
             Parent root = loader.load();
             Scene scene = new Scene(root);
