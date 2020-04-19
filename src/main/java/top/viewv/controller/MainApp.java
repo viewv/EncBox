@@ -20,7 +20,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new
                     FXMLLoader(Objects.requireNonNull(getClass()).getClassLoader()
                     .getResource("data/ui/Main.fxml"));
-            System.out.println("Initial Success");
+            System.out.println("Init Success");
 
             Parent root = loader.load();
             Scene scene = new Scene(root);

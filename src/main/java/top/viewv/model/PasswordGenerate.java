@@ -7,7 +7,7 @@ import org.passay.PasswordGenerator;
 
 public class PasswordGenerate {
 
-    public static String generatePassayPassword(int numberOflowCase,int numberOfupperCase,
+    public static String generatePassword(int numberOflowCase,int numberOfupperCase,
                                          int numberOfdigitalCase,int numberOfspecialCase,int passwordLenght) {
         PasswordGenerator gen = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
