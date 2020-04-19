@@ -2,11 +2,11 @@ package top.viewv.model.mac;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class SHA {
-
     /**
      * Get SHA of one file
      * @param mode
@@ -23,7 +23,8 @@ public class SHA {
     public static byte[] digest(String filepath,String mode) throws IOException {
         int buff = 16384;
         try {
-            /* TODO change provider into an open-source one like Bouncy Castle or Commons Codec */
+
+            Security.addProvider(new BouncyCastleProvider());
             MessageDigest hashSum;
             RandomAccessFile file = new RandomAccessFile(filepath, "r");
 
@@ -31,19 +32,19 @@ public class SHA {
 
             switch (mode) {
                 case "512/224":
-                    hashSum = MessageDigest.getInstance("SHA-512/224");
+                    hashSum = MessageDigest.getInstance("SHA-512/224","BC");
                     break;
                 case "512/226":
-                    hashSum = MessageDigest.getInstance("SHA-512/226");
+                    hashSum = MessageDigest.getInstance("SHA-512/226","BC");
                     break;
                 case "3/256":
-                    hashSum = MessageDigest.getInstance("SHA3-256");
+                    hashSum = MessageDigest.getInstance("SHA3-256","BC");
                     break;
                 case "3/512":
-                    hashSum = MessageDigest.getInstance("SHA3-512");
+                    hashSum = MessageDigest.getInstance("SHA3-512","BC");
                     break;
                 default:
-                    hashSum = MessageDigest.getInstance("SHA-256");
+                    hashSum = MessageDigest.getInstance("SHA-256","BC");
             }
 
             byte[] buffer = new byte[buff];
@@ -85,7 +86,7 @@ public class SHA {
 
             return partialHash;
 
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             e.printStackTrace();
             return null;
         }
