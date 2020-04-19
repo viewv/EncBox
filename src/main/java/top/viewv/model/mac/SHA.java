@@ -53,10 +53,14 @@ public class SHA {
             partialHash = hashSum.digest();
 
             StringBuilder hexString = new StringBuilder();
+            String tempHexString;
 
-            //TODO: Fix bug, when hash is less then 10, will be no lead 0
+            //Fixed, really ugly!
             for (byte hash : partialHash) {
-                hexString.append(Integer.toHexString(0xFF & hash));
+                tempHexString = Integer.toHexString(0xFF & hash);
+                if (tempHexString.length() != 2)
+                    tempHexString = "0" + tempHexString;
+                hexString.append(tempHexString);
             }
 
             long endTime = System.nanoTime();
