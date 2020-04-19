@@ -50,7 +50,6 @@ public class SHA {
             }
 
             file.close();
-            partialHash = new byte[hashSum.getDigestLength()];
             partialHash = hashSum.digest();
 
             StringBuilder hexString = new StringBuilder();
