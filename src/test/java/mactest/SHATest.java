@@ -14,6 +14,7 @@ public class SHATest {
             System.out.println(hashSHA.length * 8);
         }catch (IOException e) {
             e.printStackTrace();
+            System.out.println("IO Error! May be no such file founded!");
         }
     }
 }

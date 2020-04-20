@@ -25,16 +25,21 @@ public class GenerateSecKey{
             byte[] salt;
 
             if (mode == 0){
-                // generate salt
+                //TODO maybe we need a place to store salt, and also find out how to convert salt to string vice versa
                 salt = SecureRandom.getInstanceStrong().generateSeed(16);
             }else {
                 // not really safe to use a fixed salt!
                 salt = "1234567890encbox".getBytes(StandardCharsets.UTF_8);
             }
+
             System.out.printf("salt: %032x\n", new BigInteger(1, salt));
+
+            //TODO may be we should limit the length of user-set-password's length
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, interationcount, keylength);
             SecretKey tmp = factory.generateSecret(spec);
+
             return new SecretKeySpec(tmp.getEncoded(), algorithm);
+
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
