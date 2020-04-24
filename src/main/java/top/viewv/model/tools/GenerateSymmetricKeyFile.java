@@ -15,27 +15,15 @@ public class GenerateSymmetricKeyFile {
 
         //TODO 3bit about algorithm
         switch (algorithm) {
-            case "AES-CBC":
-                head += 0b00100000;
-                break;
-            case "AEC-CFB":
-                head += 0b01000000;
-                break;
-            case "AES-GCM":
-                head += 0b01100000;
-                break;
+            case "AES-CBC" -> head += 0b00100000;
+            case "AEC-CFB" -> head += 0b01000000;
+            case "AES-GCM" -> head += 0b01100000;
         }
 
         switch (keylength) {
-            case 128:
-                head += 0b00001000;
-                break;
-            case 256:
-                head += 0b00010000;
-                break;
-            case 512:
-                head += 0b00011000;
-                break;
+            case 128 -> head += 0b00001000;
+            case 256 -> head += 0b00010000;
+            case 512 -> head += 0b00011000;
         }
         //TODO Add True thing!
 
