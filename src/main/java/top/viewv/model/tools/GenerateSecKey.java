@@ -28,7 +28,7 @@ public class GenerateSecKey{
                 //TODO maybe we need a place to store salt, and also find out how to convert salt to string vice versa
                 salt = SecureRandom.getInstanceStrong().generateSeed(16);
             }else {
-                // not really safe to use a fixed salt!
+                // not really safe to use a default fixed salt!
                 salt = "1234567890encbox".getBytes(StandardCharsets.UTF_8);
             }
 
