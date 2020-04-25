@@ -14,7 +14,7 @@ import java.security.spec.InvalidParameterSpecException;
 
 public class Encrypt {
 
-    public static byte[] encrypt(String sourcefilepath, String destfilepath,String algorithm, SecretKey secretKey) throws FileNotFoundException {
+    public static byte[] encrypt(String sourcefilepath, String destfilepath,String algorithm, SecretKey secretKey) {
 
         Security.addProvider(new BouncyCastleProvider());
 

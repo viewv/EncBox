@@ -19,6 +19,7 @@ public class GenerateSecKey{
                                         int interationcount,int mode,String algorithm){
         try {
             Security.addProvider(new BouncyCastleProvider());
+            //TODO may be not only this one secret key generator
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256","BC");
 
             byte[] salt;
