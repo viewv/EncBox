@@ -20,7 +20,7 @@ public class MainApp extends Application {
             FXMLLoader loader = new
                     FXMLLoader(Objects.requireNonNull(getClass()).getClassLoader()
                     .getResource("data/ui/Main.fxml"));
-            System.out.println("Init EncBox Success");
+            System.out.println("Start EncBox Success");
             String javaversion = System.getProperty("java.version");
             System.out.println("Java Version: "+javaversion);
             String javaFxversion = System.getProperty("javafx.version");

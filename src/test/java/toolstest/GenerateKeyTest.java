@@ -1,5 +1,6 @@
 package toolstest;
 
+import org.bouncycastle.util.encoders.Hex;
 import top.viewv.model.tools.GenerateSecKey;
 import top.viewv.model.tools.GenerateSymmetricKeyFile;
 import top.viewv.model.tools.PasswordGenerate;
@@ -19,7 +20,7 @@ public class GenerateKeyTest {
         System.out.println(password);
         System.out.println(password.length());
         
-        byte[] iv = new byte[0];
+        byte[] iv = Hex.decode("000102030405060708090a0b");
 
         SecretKey secretKey = GenerateSecKey.generateKey(password,256,65566,
                                                         1,"ChaCha20-Poly1305");
