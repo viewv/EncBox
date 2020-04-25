@@ -39,7 +39,11 @@ public class Encrypt {
 
             InputStream is = new FileInputStream(sourcefilepath);
 
-            CipherOutputStream out =  new CipherOutputStream(new FileOutputStream(destfilepath),cipher);
+            FileOutputStream body = new FileOutputStream(destfilepath);
+            //TODO Add more head
+            body.write(iv);
+
+            CipherOutputStream out =  new CipherOutputStream(body,cipher);
 
             IOUtils.copyLarge(is, out);
             is.close();

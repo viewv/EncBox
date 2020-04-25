@@ -13,11 +13,13 @@ public class GenerateSymmetricKeyFile {
         byte head = 0b0;
         byte[] keybyte = key.getEncoded();
 
-        //TODO 3bit about algorithm
         switch (algorithm) {
-            case "AES-CBC" -> head += 0b00100000;
-            case "AEC-CFB" -> head += 0b01000000;
-            case "AES-GCM" -> head += 0b01100000;
+            case "AES/CBC/PKCS7Padding" -> head += 0b00100000;
+            case "AES/CFB/NoPadding"    -> head += 0b01000000;
+            case "AES/CTR/NoPadding"    -> head += 0b01100000;
+            case "AES/CBC/CS3Padding"   -> head += 0b10000000;
+            case "AES/GCM/NoPadding"    -> head += 0b10100000;
+            case "AES/CCM/NoPadding"    -> head += 0b11000000;
         }
 
         switch (keylength) {
@@ -25,7 +27,14 @@ public class GenerateSymmetricKeyFile {
             case 256 -> head += 0b00010000;
             case 512 -> head += 0b00011000;
         }
-        //TODO Add True thing!
+
+        int ivlength = iv.length;
+        System.out.println("IV Length: "+ivlength);
+        switch (ivlength){
+            case 16 -> head += 0b00000010;
+            case 32 -> head += 0b00000100;
+            case 64 -> head += 0b00000110;
+        }
 
         try {
             file.writeByte(head);

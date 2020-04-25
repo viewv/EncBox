@@ -1,0 +1,5 @@
+mactest/SHATest.class
+toolstest/PasswordGenerateTest.class
+toolstest/GenerateKeyTest.class
+symmetrictest/EncryptionTest.class
+extra/AllAlgorithms.class

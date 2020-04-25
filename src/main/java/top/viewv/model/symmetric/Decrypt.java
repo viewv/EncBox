@@ -19,7 +19,11 @@ public class Decrypt {
             Cipher cipher = Cipher.getInstance(algorithm,"BC");
             cipher.init(Cipher.DECRYPT_MODE, secretKey,new IvParameterSpec(iv));
 
-            CipherInputStream is = new CipherInputStream( new FileInputStream(sourcefilepath),cipher);
+            FileInputStream body = new FileInputStream(sourcefilepath);
+            // TODO remember to fix ont only 16
+            body.skipNBytes(16);
+
+            CipherInputStream is = new CipherInputStream(body,cipher);
             OutputStream out = new FileOutputStream(destfilepath);
 
             IOUtils.copyLarge(is, out);

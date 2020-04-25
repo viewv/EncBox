@@ -26,7 +26,7 @@ public class GenerateKeyTest {
                                                         1,"ChaCha20-Poly1305");
         assert secretKey != null;
         GenerateSymmetricKeyFile.generate(currentPath + "/src/test/java/toolstest/test.key",
-                "AES-CBC",256,secretKey,iv);
+                "AES/CBC/PKCS7Padding",256,secretKey,iv);
         String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
         System.out.println(encodedKey);
     }
