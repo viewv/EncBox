@@ -60,6 +60,7 @@ public class Decrypt {
             System.out.println("Key Length: " + keyLength);
 
             switch (ivMask) {
+                case 0b00000000 -> ivLength = 12;
                 case 0b00000001 -> ivLength = 16;
                 case 0b00000010 -> ivLength = 32;
                 case 0b00000011 -> ivLength = 64;
@@ -75,8 +76,17 @@ public class Decrypt {
 
             body.readNBytes(iv, 0, ivLength);
 
+            //Check whether use AEAD
+            int associatedDataLength = body.readNBytes(1)[0];
+
             Cipher cipher = Cipher.getInstance(algorithm, "BC");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+
+            if (associatedDataLength != 0){
+                byte[] associatedData = new byte[associatedDataLength];
+                body.readNBytes(associatedData,0,associatedDataLength);
+                cipher.updateAAD(associatedData);
+            }
 
             CipherInputStream is = new CipherInputStream(body, cipher);
 

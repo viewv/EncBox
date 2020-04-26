@@ -14,14 +14,39 @@ import java.security.spec.InvalidParameterSpecException;
 
 public class Encrypt {
 
-    public static byte[] encrypt(String sourcefilepath, String sourcefilename, String destfile, String algorithm,
-            SecretKey secretKey) {
+    public static void encrypt(String sourcefilepath, String sourcefilename, String destfile, String algorithm,
+            SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) {
 
         Security.addProvider(new BouncyCastleProvider());
 
         try {
             Cipher cipher = Cipher.getInstance(algorithm, "BC");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+
+            byte[] filename = sourcefilename.getBytes();
+            int filenameLength = filename.length;
+
+            if (filenameLength > 256){
+                throw new IllegalStateException("Too Long Filename! " + filenameLength);
+            }
+
+            System.out.println("Filename Length: " + filenameLength);
+
+            int associatedDataLength = 0;
+
+            //Hope Not a long data
+            if (ifAEAD){
+                associatedDataLength = associatedData.length;
+                if (associatedDataLength > 256){
+                    throw new IllegalStateException("Too Long associateData!: " + associatedDataLength);
+                }
+            }
+
+            //Add AES GCM with associateData Support
+            if (ifAEAD){
+                cipher.updateAAD(associatedData);
+            }
+
             AlgorithmParameters params = cipher.getParameters();
 
             byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
@@ -61,6 +86,8 @@ public class Encrypt {
             }
 
             switch (iv.length) {
+                case 12 -> {
+                }
                 case 16 -> head += 0b00000001;
                 case 32 -> head += 0b00000010;
                 case 64 -> head += 0b00000011;
@@ -74,13 +101,16 @@ public class Encrypt {
             body.write(head);
             body.write(iv);
 
+            //Check IF use associate data a little bit waist space 1 byte
+            if (ifAEAD){
+                body.write(associatedDataLength);
+                body.write(associatedData);
+            }else {
+                body.write(0);
+            }
+
             CipherOutputStream out = new CipherOutputStream(body, cipher);
 
-            byte[] filename = sourcefilename.getBytes();
-            int filenameLength = filename.length;
-            System.out.println("Filename Length: " + filenameLength);
-
-            // TODO may be really dangerous because the filename length may longer than 256
             out.write(filenameLength);
             out.write(filename);
 
@@ -89,7 +119,6 @@ public class Encrypt {
             is.close();
             out.close();
             body.close();
-            return iv;
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | InvalidKeyException
                 | InvalidParameterSpecException e) {
@@ -98,6 +127,5 @@ public class Encrypt {
             e.printStackTrace();
             System.out.println("Io Error!!!");
         }
-        return new byte[0];
     }
 }

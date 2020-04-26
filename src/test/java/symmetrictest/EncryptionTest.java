@@ -26,14 +26,11 @@ public class EncryptionTest {
         System.out.println(encodedKey);
 
         // AES/GCM/NoPadding AES/CBC/PKCS5Padding
-        byte[] iv = Encrypt.encrypt(currentPath + "/src/test/java/symmetrictest/","test.pdf",
+        Encrypt.encrypt(currentPath + "/src/test/java/symmetrictest/","test.pdf",
                                     currentPath + "/src/test/java/symmetrictest/testenc.enc",
-                                    "AES/CTR/NoPadding",secretKey);
-        if (iv.length == 0){
-            System.out.println("Error! IV length is zero");
-        }else {
-            Decrypt.decrypt(currentPath + "/src/test/java/symmetrictest/testenc.enc",
+                                    "AES/GCM/NoPadding",secretKey,true,"Test".getBytes());
+
+        Decrypt.decrypt(currentPath + "/src/test/java/symmetrictest/testenc.enc",
                             currentPath + "/src/test/java/", secretKey);
-        }
     }
 }
