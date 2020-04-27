@@ -39,6 +39,7 @@ public class Decrypt {
                 case 0b01000000 -> algorithm = "AES/CBC/CS3Padding";
                 case 0b01010000 -> algorithm = "AES/GCM/NoPadding";
                 case 0b01100000 -> algorithm = "AES/CCM/NoPadding";
+                case 0b01110000 -> algorithm = "ChaCha20-Poly1305";
                 default -> {
                     body.close();
                     throw new IllegalStateException("Unexpected AlgoMask: " + algoMask);
@@ -75,6 +76,8 @@ public class Decrypt {
             byte[] iv = new byte[ivLength];
 
             body.readNBytes(iv, 0, ivLength);
+
+            //System.out.println("IV: " + Base64.getEncoder().encodeToString(iv));
 
             //Check whether use AEAD
             int associatedDataLength = body.readNBytes(1)[0];

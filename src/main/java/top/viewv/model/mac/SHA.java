@@ -9,12 +9,12 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 public class SHA {
     /**
      * Get SHA of one file
-     * @param mode
-     *  512/224 : SHA-512/224
-     *  512/226 : SHA-512/226
-     *  3/256   : SHA3-256
-     *  3/512   : SHA3-512
-     *  default : SHA-256
+     * @param mode <br>
+     *  <li>512/224 : SHA-512/224</li>
+     *  <li>512/226 : SHA-512/226</li>
+     *  <li>3/256   : SHA3-256</li>
+     *  <li>3/512   : SHA3-512</li>
+     *  <li>default : SHA-256</li>
      * @return
      * if error return null else return a byte[]
      * @exception IOException

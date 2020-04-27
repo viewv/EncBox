@@ -64,6 +64,7 @@ public class Encrypt {
                 case "AES/CBC/CS3Padding" -> head += 0b01000000;
                 case "AES/GCM/NoPadding" -> head += 0b01010000;
                 case "AES/CCM/NoPadding" -> head += 0b01100000;
+                case "ChaCha20-Poly1305" -> head += 0b01110000;
                 default -> {
                     body.close();
                     is.close();
