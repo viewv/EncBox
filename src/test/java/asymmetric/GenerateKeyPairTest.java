@@ -9,7 +9,7 @@ import java.security.KeyPair;
 public class GenerateKeyPairTest {
     public static void main(String[] args) {
 
-        KeyPair kp =  GenerateKeyPair.generate("RSA",2048);
+        KeyPair kp =  GenerateKeyPair.generate("EC",384);
 
         assert kp != null;
         Key publicKey = kp.getPublic();
