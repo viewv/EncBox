@@ -2,7 +2,10 @@ package symmetrictest;
 
 import top.viewv.model.mac.SHA;
 import top.viewv.model.symmetric.Decrypt;
+import top.viewv.model.symmetric.DecryptProgress;
 import top.viewv.model.symmetric.Encrypt;
+import top.viewv.model.symmetric.EncryptProgress;
+import top.viewv.model.tools.Base64Tool;
 import top.viewv.model.tools.GenerateSecKey;
 import top.viewv.model.tools.PasswordGenerate;
 
@@ -35,11 +38,17 @@ public class EncryptionTest {
         }
 
         // AES/GCM/NoPadding AES/CBC/PKCS5Padding
-        Encrypt.encrypt(currentPath + "/src/test/java/symmetrictest/","test.pdf",
-                                    currentPath + "/src/test/java/symmetrictest/testenc.enc",
-                                    "ChaCha20-Poly1305",secretKey,true,hashcode);
+        Encrypt encrypt = new Encrypt();
+        EncryptProgress encryptProgress = new EncryptProgress(encrypt);
 
-        Decrypt.decrypt(currentPath + "/src/test/java/symmetrictest/testenc.enc",
-                            currentPath + "/src/test/java/", secretKey);
+        encryptProgress.doEncrypt(currentPath + "/src/test/java/symmetrictest/","test.pdf",
+                currentPath + "/src/test/java/symmetrictest/testenc.enc",
+                "ChaCha20-Poly1305",secretKey,true,hashcode);
+
+        System.out.println("Security Key");
+        System.out.println(Base64Tool.tobase64(secretKey.getEncoded()));
+
+
+
     }
 }

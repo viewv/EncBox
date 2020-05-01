@@ -14,7 +14,7 @@ import java.security.spec.InvalidParameterSpecException;
 
 public class Encrypt {
 
-    public static void encrypt(String sourcefilepath, String sourcefilename, String destfile, String algorithm,
+    public void encrypt(CallBack callBack,String sourcefilepath, String sourcefilename, String destfile, String algorithm,
             SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) {
 
         Security.addProvider(new BouncyCastleProvider());
@@ -115,11 +115,16 @@ public class Encrypt {
             out.write(filenameLength);
             out.write(filename);
 
+            callBack.report(0);
+
+            //TODO change the file reading way
             IOUtils.copyLarge(is, out);
 
             is.close();
             out.close();
             body.close();
+
+            callBack.report(100);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | InvalidKeyException
                 | InvalidParameterSpecException e) {

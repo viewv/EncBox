@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 
 public class Decrypt {
-    public static void decrypt(String sourcefile, String destfilepath, SecretKey secretKey) {
+    public void decrypt(CallBack callBack,String sourcefile, String destfilepath, SecretKey secretKey) {
         Security.addProvider(new BouncyCastleProvider());
 
         try {
@@ -106,11 +106,15 @@ public class Decrypt {
 
             OutputStream out = new FileOutputStream(destfilepath + filename);
 
+            callBack.report(0);
+
             IOUtils.copyLarge(is, out);
 
             is.close();
             out.close();
             body.close();
+
+            callBack.report(100);
 
         } catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException
                 | InvalidAlgorithmParameterException e) {
