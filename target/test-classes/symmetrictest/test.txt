@@ -1,4 +1,0 @@
-Hello World!
-This is a test for AES!
-Here is a normal text file.
-From James Dean.

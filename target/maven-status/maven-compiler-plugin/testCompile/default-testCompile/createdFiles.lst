@@ -1,5 +1,8 @@
 mactest/SHATest.class
+asymmetric/EncryptTest.class
 toolstest/PasswordGenerateTest.class
 toolstest/GenerateKeyTest.class
 symmetrictest/EncryptionTest.class
 extra/AllAlgorithms.class
+asymmetric/GenerateKeyPairTest.class
+apitest/GithubGeneralTest.class
