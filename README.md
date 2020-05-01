@@ -1,5 +1,5 @@
 # EncBox
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fviewv%2FEncBox.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fviewv%2FEncBox?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fviewv%2FEncBox.svg?type=small)](https://app.fossa.io/projects/git%2Bgithub.com%2Fviewv%2FEncBox?ref=badge_small)
 
 A easy to use encrypting software also provide an asymmetric encryption solution for normal user.
 
