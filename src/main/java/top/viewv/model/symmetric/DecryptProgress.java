@@ -14,7 +14,7 @@ public class DecryptProgress implements CallBack {
     }
 
     @Override
-    public void report(int process){
+    public void report(long process){
         System.out.println("Callback Decryption: "+process);
     }
 }

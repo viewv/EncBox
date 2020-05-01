@@ -1,6 +1,5 @@
 package top.viewv.model.symmetric;
 
-import org.apache.commons.io.IOUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
@@ -8,11 +7,17 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.*;
 import java.security.spec.InvalidParameterSpecException;
 
 public class Encrypt {
+
+    public static final int EOF = -1;
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     public void encrypt(CallBack callBack,String sourcefilepath, String sourcefilename, String destfile, String algorithm,
             SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) {
@@ -29,8 +34,6 @@ public class Encrypt {
             if (filenameLength > 256){
                 throw new IllegalStateException("Too Long Filename! " + filenameLength);
             }
-
-            System.out.println("Filename Length: " + filenameLength);
 
             int associatedDataLength = 0;
 
@@ -115,16 +118,21 @@ public class Encrypt {
             out.write(filenameLength);
             out.write(filename);
 
-            callBack.report(0);
+            long count = 0;
+            int n;
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 
-            //TODO change the file reading way
-            IOUtils.copyLarge(is, out);
+            while (EOF != (n=is.read(buffer))){
+                out.write(buffer,0,n);
+                count += n;
+                callBack.report(count);
+            }
 
             is.close();
             out.close();
             body.close();
 
-            callBack.report(100);
+            System.out.println("Encryption Finish!");
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | InvalidKeyException
                 | InvalidParameterSpecException e) {

@@ -13,6 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 
 public class Decrypt {
+
+    public static final int EOF = -1;
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
     public void decrypt(CallBack callBack,String sourcefile, String destfilepath, SecretKey secretKey) {
         Security.addProvider(new BouncyCastleProvider());
 
@@ -46,8 +50,6 @@ public class Decrypt {
                 }
             }
 
-            System.out.println(algorithm);
-
             switch (keyMask) {
                 case 0b00000100 -> keyLength = 16;
                 case 0b00001000 -> keyLength = 32;
@@ -57,8 +59,6 @@ public class Decrypt {
                     throw new IllegalStateException("Unexpected value: " + keyMask);
                 }
             }
-
-            System.out.println("Key Length: " + keyLength);
 
             switch (ivMask) {
                 case 0b00000000 -> ivLength = 12;
@@ -71,13 +71,9 @@ public class Decrypt {
                 }
             }
 
-            System.out.println("IV Length: " + ivLength);
-
             byte[] iv = new byte[ivLength];
 
             body.readNBytes(iv, 0, ivLength);
-
-            //System.out.println("IV: " + Base64.getEncoder().encodeToString(iv));
 
             //Check whether use AEAD
             int associatedDataLength = body.readNBytes(1)[0];
@@ -96,25 +92,27 @@ public class Decrypt {
             byte[] filenameLengthBytes = is.readNBytes(1);
             int filenameLength = filenameLengthBytes[0];
 
-            System.out.println("Decrypt Filename Length: " + filenameLength);
-
             byte[] filenameBytes = is.readNBytes(filenameLength);
 
             String filename = new String(filenameBytes, StandardCharsets.UTF_8);
 
-            System.out.println(filename + ": Length: " + filename.length());
-
             OutputStream out = new FileOutputStream(destfilepath + filename);
 
-            callBack.report(0);
+            long count = 0;
+            int n;
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 
-            IOUtils.copyLarge(is, out);
+            while (EOF != (n=is.read(buffer))){
+                out.write(buffer,0,n);
+                count += n;
+                callBack.report(count);
+            }
 
             is.close();
             out.close();
             body.close();
 
-            callBack.report(100);
+            System.out.println("Decryption Finish");
 
         } catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException
                 | InvalidAlgorithmParameterException e) {

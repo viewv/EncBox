@@ -1,13 +1,10 @@
 package symmetrictest;
 
 import top.viewv.model.mac.SHA;
-import top.viewv.model.symmetric.Decrypt;
-import top.viewv.model.symmetric.DecryptProgress;
 import top.viewv.model.symmetric.Encrypt;
 import top.viewv.model.symmetric.EncryptProgress;
 import top.viewv.model.tools.Base64Tool;
 import top.viewv.model.tools.GenerateSecKey;
-import top.viewv.model.tools.PasswordGenerate;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
@@ -17,9 +14,10 @@ public class EncryptionTest {
     public static void main(String[] args) {
         String currentPath = System.getProperty("user.dir");
 
-        String password = PasswordGenerate.generatePassword(
-                2,5,
-                4,5,20);
+//        String password = PasswordGenerate.generatePassword(
+//                2,5,
+//                4,5,20);
+        String password = "PkUsUhh123u8";
         System.out.println(password);
         System.out.println(password.length());
 
@@ -47,8 +45,5 @@ public class EncryptionTest {
 
         System.out.println("Security Key");
         System.out.println(Base64Tool.tobase64(secretKey.getEncoded()));
-
-
-
     }
 }

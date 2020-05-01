@@ -15,7 +15,7 @@ public class DecryptionTest {
         Decrypt decrypt = new Decrypt();
         DecryptProgress decryptProgress = new DecryptProgress(decrypt);
 
-        String s = "9PGzcAz0XcL87l0i+cx9p/t9xEJytMBIKlo9vJ4AxQA=";
+        String s = "yFhwtd8KXlnLBRdOPFtc5+kDMBxJsGDJ9NXfzZQkU2Y=";
 
         byte [] secbytes = Base64Tool.tobytes(s);
         SecretKey secretKey= new SecretKeySpec(secbytes, 0, secbytes.length, "AES");
