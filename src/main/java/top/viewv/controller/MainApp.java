@@ -22,9 +22,9 @@ public class MainApp extends Application {
                     .getResource("data/ui/Main.fxml"));
             System.out.println("Start EncBox Success");
             String javaversion = System.getProperty("java.version");
-            System.out.println("Java Version: "+javaversion);
+            System.out.println("Java Version: " + javaversion);
             String javaFxversion = System.getProperty("javafx.version");
-            System.out.println("JavaFx Version: "+javaFxversion);
+            System.out.println("JavaFx Version: " + javaFxversion);
 
             Parent root = loader.load();
             Scene scene = new Scene(root);

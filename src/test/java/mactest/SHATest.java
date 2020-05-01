@@ -9,10 +9,10 @@ public class SHATest {
         String currentPath = System.getProperty("user.dir");
         System.out.println(currentPath);
         try {
-            byte[]hashSHA =  SHA.digest(currentPath+"/src/test/java/mactest/test.txt","");
+            byte[] hashSHA = SHA.digest(currentPath + "/src/test/java/mactest/test.txt", "");
             assert hashSHA != null;
             System.out.println(hashSHA.length * 8);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             System.out.println("IO Error! May be no such file founded!");
         }

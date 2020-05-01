@@ -9,10 +9,10 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.*;
 
 public class Decrypt {
-    public static byte[] decrypt(byte[] message, String algorithm, Key privatekey){
+    public static byte[] decrypt(byte[] message, String algorithm, Key privatekey) {
         Security.addProvider(new BouncyCastleProvider());
         try {
-            Cipher cipher = Cipher.getInstance(algorithm,"BC");
+            Cipher cipher = Cipher.getInstance(algorithm, "BC");
             cipher.init(Cipher.DECRYPT_MODE, privatekey);
 
             return cipher.doFinal(message);

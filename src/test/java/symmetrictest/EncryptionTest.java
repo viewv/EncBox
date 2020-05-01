@@ -30,7 +30,7 @@ public class EncryptionTest {
         byte[] hashcode = new byte[0];
 
         try {
-            hashcode = SHA.digest(currentPath + "/src/test/java/symmetrictest/test.pdf" ,"");
+            hashcode = SHA.digest(currentPath + "/src/test/java/symmetrictest/test.pdf" ,"3/512");
         } catch (IOException e) {
             e.printStackTrace();
         }

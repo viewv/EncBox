@@ -1,6 +1,5 @@
 package top.viewv.model.symmetric;
 
-import org.apache.commons.io.IOUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
@@ -8,7 +7,10 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 
@@ -17,7 +19,7 @@ public class Decrypt {
     public static final int EOF = -1;
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    public void decrypt(CallBack callBack,String sourcefile, String destfilepath, SecretKey secretKey) {
+    public void decrypt(CallBack callBack, String sourcefile, String destfilepath, SecretKey secretKey) {
         Security.addProvider(new BouncyCastleProvider());
 
         try {
@@ -81,9 +83,9 @@ public class Decrypt {
             Cipher cipher = Cipher.getInstance(algorithm, "BC");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
 
-            if (associatedDataLength != 0){
+            if (associatedDataLength != 0) {
                 byte[] associatedData = new byte[associatedDataLength];
-                body.readNBytes(associatedData,0,associatedDataLength);
+                body.readNBytes(associatedData, 0, associatedDataLength);
                 cipher.updateAAD(associatedData);
             }
 
@@ -102,8 +104,8 @@ public class Decrypt {
             int n;
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 
-            while (EOF != (n=is.read(buffer))){
-                out.write(buffer,0,n);
+            while (EOF != (n = is.read(buffer))) {
+                out.write(buffer, 0, n);
                 count += n;
                 callBack.report(count);
             }

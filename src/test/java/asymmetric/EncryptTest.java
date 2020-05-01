@@ -19,18 +19,24 @@ public class EncryptTest {
 
         String data = "Hello World";
         System.out.println("Start Enc.");
+
         byte[] plain = data.getBytes();
         byte[] enc = Encrypt.encrypt(plain,"ECIES",pk);
+
         String s = Base64.getEncoder().encodeToString(pk.getEncoded());
+
         System.out.println("Public Key: ");
         System.out.println(s);
+
         System.out.println("Enc Data");
         s = Base64.getEncoder().encodeToString(enc);
         System.out.println(s);
+
         System.out.println("Second Enc: ");
         enc = Encrypt.encrypt(plain,"ECIES",pk);
         s = Base64.getEncoder().encodeToString(enc);
         System.out.println(s);
+
         System.out.println("Start Dec.");
         byte[] message = Decrypt.decrypt(enc,"ECIES",rk);
         System.out.println(new String(message, StandardCharsets.UTF_8));

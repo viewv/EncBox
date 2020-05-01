@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class PublishGithubGist {
-    public static String publish(String oauthtoken,String content,String description,String gistname,boolean ifpublic) throws IOException {
+    public static String publish(String oauthtoken, String content, String description, String gistname, boolean ifpublic) throws IOException {
         GitHubClient client = new GitHubClient();
         client.setOAuth2Token(oauthtoken);
 

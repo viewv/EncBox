@@ -7,8 +7,8 @@ import org.passay.PasswordGenerator;
 
 public class PasswordGenerate {
 
-    public static String generatePassword(int numberOflowCase,int numberOfupperCase,
-                                         int numberOfdigitalCase,int numberOfspecialCase,int passwordLenght) {
+    public static String generatePassword(int numberOflowCase, int numberOfupperCase,
+                                          int numberOfdigitalCase, int numberOfspecialCase, int passwordLenght) {
         PasswordGenerator gen = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
         CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
@@ -34,7 +34,7 @@ public class PasswordGenerate {
         CharacterRule splCharRule = new CharacterRule(specialChars);
         splCharRule.setNumberOfCharacters(numberOfspecialCase);
 
-        assert passwordLenght > (numberOfdigitalCase+numberOflowCase+numberOfspecialCase+numberOfupperCase) :
+        assert passwordLenght > (numberOfdigitalCase + numberOflowCase + numberOfspecialCase + numberOfupperCase) :
                 "Password length is too small";
 
         return gen.generatePassword(passwordLenght, splCharRule, lowerCaseRule,

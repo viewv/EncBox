@@ -17,8 +17,8 @@ public class DecryptionTest {
 
         String s = "yFhwtd8KXlnLBRdOPFtc5+kDMBxJsGDJ9NXfzZQkU2Y=";
 
-        byte [] secbytes = Base64Tool.tobytes(s);
-        SecretKey secretKey= new SecretKeySpec(secbytes, 0, secbytes.length, "AES");
+        byte[] secbytes = Base64Tool.tobytes(s);
+        SecretKey secretKey = new SecretKeySpec(secbytes, 0, secbytes.length, "AES");
 
         decryptProgress.doDecrypt(currentPath + "/src/test/java/symmetrictest/testenc.enc",
                 currentPath + "/src/test/java/", secretKey);

@@ -19,8 +19,8 @@ public class Encrypt {
     public static final int EOF = -1;
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    public void encrypt(CallBack callBack,String sourcefilepath, String sourcefilename, String destfile, String algorithm,
-            SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) {
+    public void encrypt(CallBack callBack, String sourcefilepath, String sourcefilename, String destfile, String algorithm,
+                        SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) {
 
         Security.addProvider(new BouncyCastleProvider());
 
@@ -31,22 +31,22 @@ public class Encrypt {
             byte[] filename = sourcefilename.getBytes();
             int filenameLength = filename.length;
 
-            if (filenameLength > 256){
+            if (filenameLength > 256) {
                 throw new IllegalStateException("Too Long Filename! " + filenameLength);
             }
 
             int associatedDataLength = 0;
 
             //Hope Not a long data
-            if (ifAEAD){
+            if (ifAEAD) {
                 associatedDataLength = associatedData.length;
-                if (associatedDataLength > 256){
+                if (associatedDataLength > 256) {
                     throw new IllegalStateException("Too Long associateData!: " + associatedDataLength);
                 }
             }
 
             //Add AES GCM with associateData Support
-            if (ifAEAD){
+            if (ifAEAD) {
                 cipher.updateAAD(associatedData);
             }
 
@@ -106,10 +106,10 @@ public class Encrypt {
             body.write(iv);
 
             //Check IF use associate data a little bit waist space 1 byte
-            if (ifAEAD){
+            if (ifAEAD) {
                 body.write(associatedDataLength);
                 body.write(associatedData);
-            }else {
+            } else {
                 body.write(0);
             }
 
@@ -122,8 +122,8 @@ public class Encrypt {
             int n;
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 
-            while (EOF != (n=is.read(buffer))){
-                out.write(buffer,0,n);
+            while (EOF != (n = is.read(buffer))) {
+                out.write(buffer, 0, n);
                 count += n;
                 callBack.report(count);
             }

@@ -1,26 +1,28 @@
 package top.viewv.model.mac;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.security.*;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 
 public class SHA {
     /**
      * Get SHA of one file
+     *
      * @param mode <br>
-     *  <li>512/224 : SHA-512/224</li>
-     *  <li>512/226 : SHA-512/226</li>
-     *  <li>3/256   : SHA3-256</li>
-     *  <li>3/512   : SHA3-512</li>
-     *  <li>default : SHA-256</li>
-     * @return
-     * if error return null else return a byte[]
-     * @exception IOException
-     * No file founded
-     *  */
-    public static byte[] digest(String filepath,String mode) throws IOException {
+     *             <li>512/224 : SHA-512/224</li>
+     *             <li>512/226 : SHA-512/226</li>
+     *             <li>3/256   : SHA3-256</li>
+     *             <li>3/512   : SHA3-512</li>
+     *             <li>default : SHA-256</li>
+     * @return if error return null else return a byte[]
+     * @throws IOException No file founded
+     */
+    public static byte[] digest(String filepath, String mode) throws IOException {
         int buff = 16384;
         try {
 

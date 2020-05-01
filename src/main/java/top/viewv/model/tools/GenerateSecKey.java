@@ -14,20 +14,20 @@ import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
-public class GenerateSecKey{
-    public static SecretKey generateKey(String password ,int keylength,
-                                        int interationcount,int mode,String algorithm){
+public class GenerateSecKey {
+    public static SecretKey generateKey(String password, int keylength,
+                                        int interationcount, int mode, String algorithm) {
         try {
             Security.addProvider(new BouncyCastleProvider());
             //TODO may be not only this one secret key generator
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256","BC");
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256", "BC");
 
             byte[] salt;
 
-            if (mode == 0){
+            if (mode == 0) {
                 //TODO maybe we need a place to store salt, and also find out how to convert salt to string vice versa
                 salt = SecureRandom.getInstanceStrong().generateSeed(16);
-            }else {
+            } else {
                 // not really safe to use a default fixed salt!
                 salt = "1234567890encbox".getBytes(StandardCharsets.UTF_8);
             }
