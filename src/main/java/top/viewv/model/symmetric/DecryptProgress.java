@@ -1,7 +1,5 @@
 package top.viewv.model.symmetric;
 
-import javax.crypto.SecretKey;
-
 public class DecryptProgress implements CallBack {
     private final Decrypt decrypt;
 
@@ -9,8 +7,8 @@ public class DecryptProgress implements CallBack {
         this.decrypt = decrypt;
     }
 
-    public void doDecrypt(String sourcefile, String destfilepath, SecretKey secretKey) {
-        new Thread(() -> decrypt.decrypt(DecryptProgress.this, sourcefile, destfilepath, secretKey)).start();
+    public void doDecrypt(String sourcefile, String destfilepath, String password) {
+        new Thread(() -> decrypt.decrypt(DecryptProgress.this, sourcefile, destfilepath, password)).start();
     }
 
     @Override

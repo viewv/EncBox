@@ -1,6 +1,7 @@
 package top.viewv.model.symmetric;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import top.viewv.model.tools.GenerateSecKey;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -19,7 +20,7 @@ public class Decrypt {
     public static final int EOF = -1;
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    public void decrypt(CallBack callBack, String sourcefile, String destfilepath, SecretKey secretKey) {
+    public void decrypt(CallBack callBack, String sourcefile, String destfilepath, String password) {
         Security.addProvider(new BouncyCastleProvider());
 
         try {
@@ -53,14 +54,18 @@ public class Decrypt {
             }
 
             switch (keyMask) {
-                case 0b00000100 -> keyLength = 16;
-                case 0b00001000 -> keyLength = 32;
-                case 0b00001100 -> keyLength = 64;
+                case 0b00000100 -> keyLength = 128;
+                case 0b00001000 -> keyLength = 256;
+                case 0b00001100 -> keyLength = 512;
                 default -> {
                     body.close();
                     throw new IllegalStateException("Unexpected value: " + keyMask);
                 }
             }
+
+            // Temp I only use mode 1, means will not add salt and also fix interationcount
+            SecretKey secretKey = GenerateSecKey.generateKey(password,keyLength,65566,
+                    1,"AES");
 
             switch (ivMask) {
                 case 0b00000000 -> ivLength = 12;
