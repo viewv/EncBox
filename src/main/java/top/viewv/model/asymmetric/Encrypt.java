@@ -12,6 +12,7 @@ public class Encrypt {
     public static byte[] encrypt(byte[] plain, String algorithm, Key publickey){
         Security.addProvider(new BouncyCastleProvider());
         try {
+            // TODO Maybe I need to add some random
             Cipher cipher = Cipher.getInstance(algorithm,"BC");
             cipher.init(Cipher.ENCRYPT_MODE, publickey);
 
