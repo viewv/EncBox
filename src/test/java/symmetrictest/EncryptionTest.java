@@ -14,9 +14,6 @@ public class EncryptionTest {
     public static void main(String[] args) {
         String currentPath = System.getProperty("user.dir");
 
-//        String password = PasswordGenerate.generatePassword(
-//                2,5,
-//                4,5,20);
         String password = "PkUsUhh123u8";
         System.out.println(password);
         System.out.println(password.length());
