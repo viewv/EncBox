@@ -22,3 +22,8 @@ jobs:
         java-version: 1.14
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Upload Target
+      uses: actions/upload-artifact@master
+      with:
+        name: EncBox
+        path: EncBox/target
