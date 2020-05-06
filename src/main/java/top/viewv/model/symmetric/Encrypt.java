@@ -25,6 +25,9 @@ public class Encrypt {
         Security.addProvider(new BouncyCastleProvider());
 
         try {
+
+            System.out.println("Sec KeyLength: "+secretKey.getEncoded().length);
+
             Cipher cipher = Cipher.getInstance(algorithm, "BC");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 

@@ -11,7 +11,7 @@ public class DecryptionTest {
         Decrypt decrypt = new Decrypt();
         DecryptProgress decryptProgress = new DecryptProgress(decrypt);
 
-        String password = "PkUsUhh123u8";
+        String password = ".N9RmGoq7E6VM@cC2bkVPXqCD.cWUE";
 
         decryptProgress.doDecrypt(currentPath + "/src/test/java/symmetrictest/testenc.enc",
                 currentPath + "/src/test/java/", password);

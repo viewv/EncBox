@@ -14,11 +14,11 @@ public class EncryptionTest {
     public static void main(String[] args) {
         String currentPath = System.getProperty("user.dir");
 
-        String password = "PkUsUhh123u8";
+        String password = ".N9RmGoq7E6VM@cC2bkVPXqCD.cWUE";
         System.out.println(password);
         System.out.println(password.length());
 
-        SecretKey secretKey = GenerateSecKey.generateKey(password,256,65566,
+        SecretKey secretKey = GenerateSecKey.generateKey(password,128,65566,
                 1,"AES");
 
         assert secretKey != null : "key is empty!";
@@ -38,7 +38,7 @@ public class EncryptionTest {
 
         encryptProgress.doEncrypt(currentPath + "/src/test/java/symmetrictest/","test.pdf",
                 currentPath + "/src/test/java/symmetrictest/testenc.enc",
-                "ChaCha20-Poly1305",secretKey,true,hashcode);
+                "AES/CCM/NoPadding",secretKey,true,hashcode);
 
         System.out.println("Security Key");
         System.out.println(Base64Tool.tobase64(secretKey.getEncoded()));

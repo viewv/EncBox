@@ -23,6 +23,7 @@ public class MainApp extends Application {
 
             System.out.println("Start EncBox Success");
 
+            // Print some useful information
             String javaversion = System.getProperty("java.version");
             System.out.println("Java Version: " + javaversion);
 
@@ -30,7 +31,10 @@ public class MainApp extends Application {
             System.out.println("JavaFx Version: " + javaFxversion);
 
             final String os = System.getProperty("os.name");
-            System.out.println("operate System: "+os);
+            System.out.println("operate System: " + os);
+
+            String currnetPath = System.getProperty("user.dir");
+            System.out.println("Current Path: " + currnetPath);
 
             Parent root = loader.load();
             Scene scene = new Scene(root);
@@ -42,6 +46,7 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
+            //Set min-size
             primaryStage.setMinWidth(primaryStage.getWidth());
             primaryStage.setMinHeight(primaryStage.getHeight());
 
