@@ -14,7 +14,7 @@ public class EncryptionTest {
     public static void main(String[] args) {
         String currentPath = System.getProperty("user.dir");
 
-        String password = ".N9RmGoq7E6VM@cC2bkVPXqCD.cWUE";
+        String password = ".N9RmGoq7E6VM@";
         System.out.println(password);
         System.out.println(password.length());
 

@@ -32,13 +32,23 @@ public class SHA {
 
             long startTime = System.nanoTime();
 
-            hashSum = switch (mode) {
-                case "512/224" -> MessageDigest.getInstance("SHA-512/224", "BC");
-                case "512/226" -> MessageDigest.getInstance("SHA-512/226", "BC");
-                case "3/256" -> MessageDigest.getInstance("SHA3-256", "BC");
-                case "3/512" -> MessageDigest.getInstance("SHA3-512", "BC");
-                default -> MessageDigest.getInstance("SHA-256", "BC");
-            };
+            switch (mode) {
+                case "512/224":
+                    hashSum =  MessageDigest.getInstance("SHA-512/224", "BC");
+                    break;
+                case "512/226":
+                    hashSum = MessageDigest.getInstance("SHA-512/226", "BC");
+                    break;
+                case "3/256":
+                    hashSum = MessageDigest.getInstance("SHA3-256", "BC");
+                    break;
+                case "3/512":
+                    hashSum = MessageDigest.getInstance("SHA3-512", "BC");
+                    break;
+                default:
+                    hashSum = MessageDigest.getInstance("SHA-256", "BC");
+                    break;
+            }
 
             byte[] buffer = new byte[buff];
             byte[] partialHash;
