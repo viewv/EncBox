@@ -2,6 +2,7 @@
   <dictionary name="viewv">
     <words>
       <w>aead</w>
+      <w>encbox</w>
     </words>
   </dictionary>
 </component>

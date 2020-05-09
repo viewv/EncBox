@@ -15,8 +15,7 @@ public class GenerateKeyTest {
         String currentPath = System.getProperty("user.dir");
 
         String password = PasswordGenerate.generatePassword(
-                2, 5,
-                4, 5, 20);
+                2, 5, 20);
         System.out.println(password);
         System.out.println(password.length());
 

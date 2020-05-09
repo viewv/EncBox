@@ -6,7 +6,7 @@
     <artifactId>EncBox</artifactId>
     <version>0.6.1-alpha</version>
 
-    <properties>
+<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

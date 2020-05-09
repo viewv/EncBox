@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXSlider?>
@@ -21,10 +22,10 @@
             <Group layoutX="82.0" layoutY="7.0" AnchorPane.rightAnchor="15.0">
                <children>
                   <JFXToggleButton fx:id="togModeChooser" layoutX="291.0" layoutY="6.0" prefHeight="52.0" prefWidth="127.0" text="Encrypy" />
-                  <JFXButton layoutX="206.0" layoutY="21.0" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Open" textFill="WHITE" />
+                  <JFXButton fx:id="btnOpenFile" layoutX="206.0" layoutY="21.0" onMouseClicked="#onClickedBtnOpenFile" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Open" textFill="WHITE" />
                </children>
             </Group>
-            <Label fx:id="labFileAlert" layoutX="25.0" layoutY="44.0" text="Choose Your File" textFill="#000000c5" AnchorPane.leftAnchor="25.0" />
+            <Label fx:id="labFileAlert" layoutX="25.0" layoutY="44.0" prefHeight="17.0" prefWidth="235.0" text="Choose Your File" textFill="#000000c5" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="255.0" />
             <Label fx:id="labFileinfo" layoutX="23.0" layoutY="14.0" prefHeight="30.0" prefWidth="249.0" text="S1" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="240.0">
                <font>
                   <Font name="System Bold" size="25.0" />
@@ -38,17 +39,17 @@
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labAlgoLength" layoutX="60.0" prefHeight="30.0" prefWidth="50.0">
+                  <Label fx:id="labAlgoLength" layoutX="50.0" prefHeight="30.0" prefWidth="50.0">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labAlgoMode" layoutX="123.0" prefHeight="30.0" prefWidth="56.0">
+                  <Label fx:id="labAlgoMode" layoutX="100.0" prefHeight="30.0" prefWidth="56.0">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labPadding" layoutX="179.0" prefHeight="30.0" prefWidth="172.0">
+                  <Label fx:id="labPadding" layoutX="162.0" prefHeight="30.0" prefWidth="172.0">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
@@ -56,9 +57,9 @@
                </children>
             </Group>
             <Label fx:id="labAlgoAlert" layoutX="25.0" layoutY="112.0" prefHeight="17.0" prefWidth="127.0" text="Configuration" textFill="#000000c5" AnchorPane.leftAnchor="25.0" />
-            <JFXComboBox fx:id="cboxAlgo" layoutX="25.0" layoutY="144.0" prefHeight="27.0" prefWidth="85.0" promptText="Agorithm" style="-jfx-label-float: true;" AnchorPane.leftAnchor="25.0" />
-            <JFXComboBox fx:id="cboxLength" layoutX="25.0" layoutY="187.0" prefHeight="27.0" prefWidth="85.0" promptText="Length" style="-jfx-label-float: true;" AnchorPane.leftAnchor="25.0" />
-            <JFXComboBox fx:id="cboxMode" layoutX="124.0" layoutY="144.0" prefHeight="27.0" prefWidth="93.0" promptText="Mode" style="-jfx-label-float: true;" />
+            <JFXComboBox fx:id="cboxAlgo" layoutX="25.0" layoutY="144.0" onMouseClicked="#selectAlgorithm" prefHeight="27.0" prefWidth="119.0" promptText="Agorithm" style="-jfx-label-float: true;" AnchorPane.leftAnchor="25.0" />
+            <JFXComboBox fx:id="cboxLength" layoutX="156.0" layoutY="187.0" onMouseClicked="#selectLength" prefHeight="27.0" prefWidth="102.0" promptText="Length" style="-jfx-label-float: true;" AnchorPane.leftAnchor="156.0" />
+            <JFXComboBox fx:id="cboxMode" layoutX="154.0" layoutY="144.0" onMouseClicked="#selectMode" prefHeight="27.0" prefWidth="102.0" promptText="Mode" style="-jfx-label-float: true;" />
             <Group fx:id="GroupChaCha20" layoutX="28.0" layoutY="82.0" visible="false" AnchorPane.leftAnchor="25.0">
                <children>
                   <Label fx:id="labAlgoChaCha20" prefHeight="30.0" prefWidth="235.0" text="ChaCha20-Poly1305">
@@ -73,34 +74,41 @@
                   </Label>
                </children>
             </Group>
-            <JFXComboBox fx:id="cboxPadding" layoutX="124.0" layoutY="187.0" prefHeight="27.0" prefWidth="93.0" promptText="Padding" style="-jfx-label-float: true;" />
-            <JFXTextField fx:id="textPassword" layoutX="258.0" layoutY="187.0" prefHeight="27.0" prefWidth="235.0" promptText="Password" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="15.0" />
-            <JFXToggleButton fx:id="togAead" layoutX="15.0" layoutY="214.0" text="Default AEAD" AnchorPane.leftAnchor="15.0" />
+            <JFXComboBox fx:id="cboxPadding" layoutX="25.0" layoutY="187.0" onMouseClicked="#selectPadding" prefHeight="27.0" prefWidth="119.0" promptText="Padding" style="-jfx-label-float: true;" AnchorPane.leftAnchor="25.0" />
+            <JFXTextField fx:id="textPassword" layoutX="258.0" layoutY="187.0" onMouseClicked="#setPassword" prefHeight="27.0" prefWidth="235.0" promptText="Password" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="15.0" />
+            <JFXToggleButton fx:id="togAead" layoutX="15.0" layoutY="214.0" onMouseClicked="#changeAeadMode" text="Default AEAD" AnchorPane.leftAnchor="15.0" />
             <JFXTextField fx:id="textAEAD" layoutX="265.0" layoutY="231.0" prefHeight="27.0" prefWidth="235.0" promptText="AEAD String" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="15.0" />
-            <JFXSlider fx:id="sldNumSpecial" blockIncrement="1.0" layoutX="334.0" layoutY="138.0" max="30.0" prefHeight="16.0" prefWidth="112.0" value="3.0" AnchorPane.leftAnchor="334.0" AnchorPane.rightAnchor="15.0" />
-            <JFXSlider fx:id="sldNumUpper" blockIncrement="1.0" layoutX="334.0" layoutY="163.0" max="30.0" prefHeight="16.0" prefWidth="165.0" value="7.0" AnchorPane.leftAnchor="334.0" AnchorPane.rightAnchor="15.0" />
-            <JFXSlider fx:id="sldPasswordLength" blockIncrement="1.0" indicatorPosition="RIGHT" layoutX="334.0" layoutY="115.0" max="30.0" min="10.0" prefHeight="16.0" prefWidth="112.0" value="20.0" AnchorPane.leftAnchor="334.0" AnchorPane.rightAnchor="15.0" />
-            <Label layoutX="265.0" layoutY="114.0" prefHeight="17.0" prefWidth="47.0" text="Length" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="188.0" />
-            <Label layoutX="265.0" layoutY="163.0" prefHeight="17.0" prefWidth="62.0" text="Uppercase" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="188.0" />
-            <Label layoutX="265.0" layoutY="137.0" prefHeight="17.0" prefWidth="62.0" text="Special " AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="188.0" />
+            <JFXSlider fx:id="sldPasswordLength" blockIncrement="1.0" layoutX="328.0" layoutY="115.0" max="35.0" min="10.0" onMouseDragged="#changeLength" prefHeight="16.0" prefWidth="172.0" showTickLabels="true" value="20.0" AnchorPane.leftAnchor="328.0" AnchorPane.rightAnchor="15.0" />
+            <Group fx:id="GroupPassword" layoutX="265.0" layoutY="114.0" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="188.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="47.0" text="Length" />
+               </children>
+            </Group>
             <Label fx:id="labProcess" layoutX="26.0" layoutY="279.0" prefHeight="30.0" prefWidth="249.0" text="S3" AnchorPane.leftAnchor="25.0">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Label>
             <Label fx:id="labFilepath" layoutX="25.0" layoutY="309.0" prefHeight="17.0" prefWidth="268.0" text="Final procedure" textFill="#000000c5" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="220.0" />
-            <JFXProgressBar layoutX="24.0" layoutY="363.0" prefHeight="15.0" progress="0.0" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="291.0" />
+            <JFXProgressBar fx:id="pbarProcess" layoutX="24.0" layoutY="363.0" prefHeight="15.0" progress="0.0" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="291.0" />
             <Group layoutX="306.0" layoutY="326.0" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="15.0">
                <children>
-                  <JFXButton fx:id="btnChooseDir" layoutX="3.0" layoutY="22.0" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Open" textFill="WHITE" />
+                  <JFXButton fx:id="btnChooseDir" layoutX="3.0" layoutY="22.0" onMouseClicked="#onClickedChooseDir" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Open" textFill="WHITE" />
                   <Label text="Select directory" textFill="#000000b3">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="btnStart" layoutX="111.0" layoutY="22.0" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #5e35b1#5e35b1;" text="Start" textFill="WHITE" />
+                  <JFXButton fx:id="btnStart" layoutX="111.0" layoutY="22.0" onMouseClicked="#onClickStart" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #5e35b1#5e35b1;" text="Start" textFill="WHITE" />
                </children>
             </Group>
+            <JFXCheckBox fx:id="chkSpecial" layoutX="328.0" layoutY="149.0" text="Special" AnchorPane.rightAnchor="127.0" />
+            <JFXCheckBox fx:id="chkUpper" layoutX="417.0" layoutY="149.0" text="Upper" AnchorPane.rightAnchor="32.0" />
+            <Label fx:id="labFinalAlert" layoutX="25.0" layoutY="335.0" prefHeight="17.0" prefWidth="200.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="290.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

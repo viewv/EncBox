@@ -7,10 +7,7 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.*;
 import java.security.spec.InvalidParameterSpecException;
 
@@ -20,7 +17,7 @@ public class Encrypt {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     public void encrypt(CallBack callBack, String sourcefilepath, String sourcefilename, String destfile, String algorithm,
-                        SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) {
+                        SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) throws IOException {
 
         Security.addProvider(new BouncyCastleProvider());
 
@@ -57,9 +54,10 @@ public class Encrypt {
 
             byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 
-            InputStream is = new FileInputStream(sourcefilepath + sourcefilename);
+            InputStream is = new FileInputStream(sourcefilepath);
 
-            FileOutputStream body = new FileOutputStream(destfile);
+            //TODO let user decide!
+            FileOutputStream body = new FileOutputStream(destfile+ File.separator + "encbox.enc");
 
             byte head = 0b0;
 
@@ -159,13 +157,12 @@ public class Encrypt {
             body.close();
 
             System.out.println("Encryption Finish!");
+            //Lazy use -10 to report OK
+            callBack.report(-10);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | InvalidKeyException
                 | InvalidParameterSpecException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Io Error!!!");
         }
     }
 }

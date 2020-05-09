@@ -10,6 +10,7 @@ top/viewv/model/tools/RestoreFromSymmetricKeyFile.class
 top/viewv/model/tools/PasswordGenerate.class
 top/viewv/model/tools/GenerateSecKey.class
 top/viewv/model/tools/GenerateKeyPair.class
+top/viewv/controller/Deliver.class
 top/viewv/model/symmetric/EncryptProgress.class
 top/viewv/model/mac/SHA.class
 top/viewv/api/PublishGithubGist.class

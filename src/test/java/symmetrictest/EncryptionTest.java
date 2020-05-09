@@ -33,12 +33,12 @@ public class EncryptionTest {
         }
 
         // AES/GCM/NoPadding AES/CBC/PKCS5Padding
-        Encrypt encrypt = new Encrypt();
-        EncryptProgress encryptProgress = new EncryptProgress(encrypt);
-
-        encryptProgress.doEncrypt(currentPath + "/src/test/java/symmetrictest/","test.pdf",
-                currentPath + "/src/test/java/symmetrictest/testenc.enc",
-                "AES/CCM/NoPadding",secretKey,true,hashcode);
+//        Encrypt encrypt = new Encrypt();
+//        EncryptProgress encryptProgress = new EncryptProgress(encrypt);
+//
+//        encryptProgress.doEncrypt(currentPath + "/src/test/java/symmetrictest/","test.pdf",
+//                currentPath + "/src/test/java/symmetrictest/testenc.enc",
+//                "AES/CCM/NoPadding",secretKey,true,hashcode);
 
         System.out.println("Security Key");
         System.out.println(Base64Tool.tobase64(secretKey.getEncoded()));

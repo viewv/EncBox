@@ -12,6 +12,7 @@
 /Users/viewv/EncBox/src/main/java/top/viewv/model/symmetric/CallBack.java
 /Users/viewv/EncBox/src/main/java/top/viewv/api/PublishGithubGist.java
 /Users/viewv/EncBox/src/main/java/top/viewv/controller/MainApp.java
+/Users/viewv/EncBox/src/main/java/top/viewv/controller/Deliver.java
 /Users/viewv/EncBox/src/main/java/top/viewv/model/symmetric/DecryptProgress.java
 /Users/viewv/EncBox/src/main/java/top/viewv/model/symmetric/EncryptProgress.java
 /Users/viewv/EncBox/src/main/java/top/viewv/model/tools/GenerateKeyPair.java
