@@ -21,7 +21,7 @@
             <Separator layoutX="15.0" layoutY="67.0" prefHeight="15.0" prefWidth="487.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
             <Group layoutX="82.0" layoutY="7.0" AnchorPane.rightAnchor="15.0">
                <children>
-                  <JFXToggleButton fx:id="togModeChooser" layoutX="291.0" layoutY="6.0" prefHeight="52.0" prefWidth="127.0" text="Encrypy" />
+                  <JFXToggleButton fx:id="togModeChooser" layoutX="291.0" layoutY="6.0" onMouseClicked="#switchMode" prefHeight="52.0" prefWidth="127.0" text="Encrypy" />
                   <JFXButton fx:id="btnOpenFile" layoutX="206.0" layoutY="21.0" onMouseClicked="#onClickedBtnOpenFile" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Open" textFill="WHITE" />
                </children>
             </Group>
@@ -94,7 +94,7 @@
             <Group layoutX="306.0" layoutY="326.0" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="15.0">
                <children>
                   <JFXButton fx:id="btnChooseDir" layoutX="3.0" layoutY="22.0" onMouseClicked="#onClickedChooseDir" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Open" textFill="WHITE" />
-                  <Label text="Select directory" textFill="#000000b3">
+                  <Label layoutY="2.0" text="Select directory" textFill="#000000b3">
                      <font>
                         <Font size="14.0" />
                      </font>

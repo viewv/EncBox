@@ -5,12 +5,13 @@ import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import top.viewv.model.mac.SHA;
+import top.viewv.model.symmetric.Decrypt;
+import top.viewv.model.symmetric.DecryptProgress;
 import top.viewv.model.symmetric.Encrypt;
 import top.viewv.model.symmetric.EncryptProgress;
 import top.viewv.model.tools.GenerateSecKey;
@@ -24,7 +25,7 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable,Deliver {
+public class MainController implements Initializable, Deliver {
 
     // UI part
     public AnchorPane basePane;
@@ -85,23 +86,35 @@ public class MainController implements Initializable,Deliver {
     private int numOfSpecial = 0;
     private int numOfUpper = 0;
 
-    private SecureRandom secureRandom = new SecureRandom();
+    private final SecureRandom secureRandom = new SecureRandom();
 
     private long sourceFileLength = 1;
 
+    private int workMode = 0;
+
     @Override
-    public void deliver(long process){
+    public void deliver(long process) {
         pbarProcess.setProgress(process / sourceFileLength);
-        int p = (int) (process/sourceFileLength) * 100;
+        int p = (int) (process / sourceFileLength) * 100;
         labProcess.setText(p + "%");
+        System.out.println(process);
     }
 
     @Override
-    public void reply(String message){
-        if (message.equals("Error")){
+    public void reply(String message) {
+        if (message.equals("Error")) {
             labFinalAlert.setText("IO Error!");
         }
-        if (message.equals("OK")){
+        if (message.equals("IO Error")){
+            labFinalAlert.setText("IO Error");
+        }
+        if (message.equals("Password Error")){
+            labFinalAlert.setText("Password Error");
+        }
+        if (message.equals("Password Don't Match")){
+            labFinalAlert.setText("Password Don't Match");
+        }
+        if (message.equals("OK")) {
             labFinalAlert.setText("All Done!");
 
             btnStart.setDisable(false);
@@ -160,7 +173,26 @@ public class MainController implements Initializable,Deliver {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    public void onClickedBtnOpenFile(MouseEvent mouseEvent) {
+    public void switchMode() {
+        if (togModeChooser.isSelected()){
+
+            togModeChooser.setText("Decrypt");
+
+            workMode = 1;
+
+            setS2state(false);
+            setS3state(true);
+
+            textPassword.setDisable(false);
+
+            btnStart.setDisable(true);
+        }else {
+            togModeChooser.setText("Encrypt");
+            workMode = 0;
+        }
+    }
+
+    public void onClickedBtnOpenFile() {
         FileChooser fileChooser = new FileChooser();
 
         File selectFile = fileChooser.showOpenDialog(null);
@@ -177,24 +209,26 @@ public class MainController implements Initializable,Deliver {
             labFileinfo.setText(filename);
             labFileAlert.setText(filepath);
 
-            setS2state(true);
+            if (workMode == 0){
+                setS2state(true);
 
-            // after choose right AEAD mode will use this part
-            togAead.setVisible(false);
-            textAEAD.setVisible(false);
+                // after choose right AEAD mode will use this part
+                togAead.setVisible(false);
+                textAEAD.setVisible(false);
 
-            cboxMode.setDisable(true);
-            cboxPadding.setDisable(true);
-            cboxLength.setDisable(true);
+                cboxMode.setDisable(true);
+                cboxPadding.setDisable(true);
+                cboxLength.setDisable(true);
 
-            // must select right algorithm
-            GroupPassword.setDisable(true);
-            textPassword.setDisable(true);
-            sldPasswordLength.setDisable(true);
-            chkUpper.setDisable(true);
-            chkSpecial.setDisable(true);
+                // must select right algorithm
+                GroupPassword.setDisable(true);
+                textPassword.setDisable(true);
+                sldPasswordLength.setDisable(true);
+                chkUpper.setDisable(true);
+                chkSpecial.setDisable(true);
 
-            cboxAlgo.getSelectionModel().selectFirst();
+                cboxAlgo.getSelectionModel().selectFirst();
+            }
 
         } else {
             labFileAlert.setText("Error Please Choose the right file");
@@ -221,7 +255,7 @@ public class MainController implements Initializable,Deliver {
         cboxLength.setDisable(true);
     }
 
-    public void selectMode(MouseEvent mouseEvent) {
+    public void selectMode() {
 
         cboxMode.getItems().clear();
 
@@ -301,7 +335,7 @@ public class MainController implements Initializable,Deliver {
     }
 
 
-    public void selectLength(MouseEvent mouseEvent) {
+    public void selectLength() {
 
         cboxLength.getItems().clear();
 
@@ -325,16 +359,18 @@ public class MainController implements Initializable,Deliver {
     }
 
 
-    public void setPassword(MouseEvent mouseEvent) {
+    public void setPassword() {
 
-        length = cboxLength.getValue();
-        labAlgoLength.setText(length.toString());
+        if (workMode == 0){
+            length = cboxLength.getValue();
+            labAlgoLength.setText(length.toString());
 
-        setS3state(true);
-        btnStart.setDisable(true);
+            setS3state(true);
+            btnStart.setDisable(true);
+        }
     }
 
-    public void changeLength(MouseEvent mouseEvent) {
+    public void changeLength() {
         passwordLength = (int) sldPasswordLength.getValue();
 
         if (chkSpecial.isSelected()) {
@@ -359,7 +395,7 @@ public class MainController implements Initializable,Deliver {
         textPassword.setText(randomPassword);
     }
 
-    public void changeAeadMode(MouseEvent mouseEvent) {
+    public void changeAeadMode() {
         if (togAead.isSelected()) {
             textAEAD.setVisible(true);
             textAEAD.setDisable(false);
@@ -370,7 +406,7 @@ public class MainController implements Initializable,Deliver {
     }
 
 
-    public void onClickedChooseDir(MouseEvent mouseEvent) {
+    public void onClickedChooseDir() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
 
         File selectPath = directoryChooser.showDialog(null);
@@ -384,60 +420,80 @@ public class MainController implements Initializable,Deliver {
         }
     }
 
-    public void onClickStart(MouseEvent mouseEvent) {
+    public void onClickStart() {
 
         String password = textPassword.getText();
+
         if (password == null) {
             labFinalAlert.setText("Password!");
             return;
         }
 
-        String associateData;
+        if (workMode == 0) {
+            String associateData;
 
-        if (algorithm.equals("ChaCha20") || mode.equals("GCM") || mode.equals("CCM")) {
-            if (togAead.isSelected()) {
-                associateData = textAEAD.getText();
-                if (associateData == null) {
-                    labFinalAlert.setText("AEAD String");
-                    return;
+            if (algorithm.equals("ChaCha20") || mode.equals("GCM") || mode.equals("CCM")) {
+                if (togAead.isSelected()) {
+                    associateData = textAEAD.getText();
+                    if (associateData == null) {
+                        labFinalAlert.setText("AEAD String");
+                        return;
+                    }
                 }
             }
-        }
 
-        labFinalAlert.setText("");
+            labFinalAlert.setText("");
 
-        Encrypt encrypt = new Encrypt();
-        EncryptProgress encryptProgress = new EncryptProgress(MainController.this,encrypt);
-        SecretKey secretKey = GenerateSecKey.generateKey(password, length, 65566,
-                1, "AES");
+            Encrypt encrypt = new Encrypt();
+            EncryptProgress encryptProgress = new EncryptProgress(MainController.this, encrypt);
+            SecretKey secretKey = GenerateSecKey.generateKey(password, length, 65566,
+                    1, "AES");
 
-        if (algorithm.equals("ChaCha20")) {
+            String destfile = destFilepath + File.separator + sourceFilename.substring(0, sourceFilename.lastIndexOf(".")) + ".enc";
 
             byte[] associatedBytes;
 
             if (togAead.isSelected()) {
                 associateData = textAEAD.getText();
                 associatedBytes = associateData.getBytes();
-            }else {
+            } else {
                 try {
-                    associatedBytes = SHA.digest(sourceFile,"3/512");
+                    associatedBytes = SHA.digest(sourceFile, "3/512");
                 } catch (IOException e) {
-                   labFinalAlert.setText("Source File Broken!");
-                   return;
+                    labFinalAlert.setText("Source File Broken!");
+                    return;
                 }
             }
 
-            Platform.runLater(() -> encryptProgress.doEncrypt(sourceFile,sourceFilename,destFilepath,
-                    "ChaCha20-Poly1305",secretKey,true,associatedBytes));
+            boolean ifAEAD = false;
 
-            btnStart.setDisable(true);
-            setS1state(false);
-            setS2state(false);
+            if (algorithm.equals("ChaCha20") || mode.equals("GCM") || mode.equals("CCM")) {
+                ifAEAD = true;
+            }
+
+            if (algorithm.equals("ChaCha20")) {
+                algorithm = "ChaCha20-Poly1305";
+            } else if (algorithm.equals("AES")) {
+                algorithm += "/" + mode;
+                algorithm += "/" + padding;
+            }
+
+            boolean finalIfAEAD = ifAEAD;
+            Platform.runLater(() -> encryptProgress.doEncrypt(sourceFile, sourceFilename, destfile,
+                    algorithm, secretKey, finalIfAEAD, associatedBytes));
+
+        }else {
+            Decrypt decrypt = new Decrypt();
+            DecryptProgress decryptProgress = new DecryptProgress(MainController.this,decrypt);
+            Platform.runLater(() -> decryptProgress.doDecrypt(sourceFile,destFilepath,password));
+
         }
+        btnStart.setDisable(true);
 
-        if (algorithm.equals("AES")){
+        System.out.println(sourceFileLength);
 
-        }
+        setS1state(false);
+        setS2state(false);
     }
 }
 

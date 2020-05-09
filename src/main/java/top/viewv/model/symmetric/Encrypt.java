@@ -23,8 +23,6 @@ public class Encrypt {
 
         try {
 
-            System.out.println("Sec KeyLength: "+secretKey.getEncoded().length);
-
             Cipher cipher = Cipher.getInstance(algorithm, "BC");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
@@ -56,8 +54,7 @@ public class Encrypt {
 
             InputStream is = new FileInputStream(sourcefilepath);
 
-            //TODO let user decide!
-            FileOutputStream body = new FileOutputStream(destfile+ File.separator + "encbox.enc");
+            FileOutputStream body = new FileOutputStream(destfile);
 
             byte head = 0b0;
 
@@ -157,7 +154,8 @@ public class Encrypt {
             body.close();
 
             System.out.println("Encryption Finish!");
-            //Lazy use -10 to report OK
+
+            //Lazy use -10 to report OK may be maybe their will be more code
             callBack.report(-10);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | InvalidKeyException

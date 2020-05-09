@@ -8,10 +8,7 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 
@@ -20,13 +17,11 @@ public class Decrypt {
     public static final int EOF = -1;
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    public void decrypt(CallBack callBack, String sourcefile, String destfilepath, String password) {
+    public void decrypt(CallBack callBack, String sourcefile, String destfilepath, String password) throws InvalidKeyException, IOException, NoSuchAlgorithmException, NoSuchProviderException,
+            NoSuchPaddingException, InvalidAlgorithmParameterException {
         Security.addProvider(new BouncyCastleProvider());
 
         try {
-
-            System.out.println("Staring Decrypt!");
-
             FileInputStream body = new FileInputStream(sourcefile);
 
             byte[] heads = new byte[1];
@@ -133,7 +128,7 @@ public class Decrypt {
 
             String filename = new String(filenameBytes, StandardCharsets.UTF_8);
 
-            OutputStream out = new FileOutputStream(destfilepath + filename);
+            OutputStream out = new FileOutputStream(destfilepath + File.separator + filename);
 
             long count = 0;
             int n;
@@ -149,14 +144,11 @@ public class Decrypt {
             out.close();
             body.close();
 
-            System.out.println("Decryption Finish");
+            callBack.report(-10);
 
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException
-                | InvalidAlgorithmParameterException e) {
+        }catch (NegativeArraySizeException e){
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("IOError!!!");
+            throw new NegativeArraySizeException("Password Don't match");
         }
     }
 }

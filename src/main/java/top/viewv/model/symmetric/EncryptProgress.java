@@ -27,13 +27,6 @@ public class EncryptProgress implements CallBack {
                 deliver.reply("Error");
             }
         });
-//        new Thread(() -> {
-//            try {
-//                encrypt.encrypt(EncryptProgress.this, sourcefilepath, sourcefilename, destfile, algorithm, secretKey, ifAEAD, associatedData);
-//            } catch (IOException e) {
-//                deliver.reply("Error");
-//            }
-//        }).start();
     }
 
     @Override
