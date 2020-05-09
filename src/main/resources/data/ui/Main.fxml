@@ -5,6 +5,7 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.scene.Group?>
@@ -16,7 +17,7 @@
 <AnchorPane fx:id="basePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.viewv.controller.MainController">
    <children>
       <AnchorPane fx:id="paneSide" layoutX="6.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="85.0" style="-fx-background-color: #03a9f4#03a9f4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <AnchorPane fx:id="paneMainfunction" layoutX="86.0" layoutY="75.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="paneMainfunction" layoutX="86.0" layoutY="75.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Separator layoutX="15.0" layoutY="67.0" prefHeight="15.0" prefWidth="487.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
             <Group layoutX="82.0" layoutY="7.0" AnchorPane.rightAnchor="15.0">
@@ -109,6 +110,30 @@
                   <Font size="15.0" />
                </font>
             </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="paneMainfunction1" layoutX="95.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Group layoutX="14.0" layoutY="80.0">
+               <children>
+                  <JFXTextArea layoutY="17.0" prefHeight="177.0" prefWidth="235.0" />
+                  <Label text="Public Key">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+            <Group layoutX="258.0" layoutY="80.0">
+               <children>
+                  <JFXTextArea layoutY="17.0" prefHeight="177.0" prefWidth="235.0" />
+                  <Label text="Private Key">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
          </children>
       </AnchorPane>
    </children>
