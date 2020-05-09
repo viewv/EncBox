@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -70,6 +71,21 @@ public class MainController implements Initializable, Deliver {
     public JFXButton btnStart;
     public JFXProgressBar pbarProcess;
     public Label labFinalAlert;
+    
+    // Asymmetric part this controller is really terrible
+    public AnchorPane paneAsymmetric;
+    public JFXTextArea arePublic;
+    public Label labPublic;
+    public JFXTextArea arePrivate;
+    public Label labPrivate;
+    public JFXButton btnSavekey;
+    public JFXButton btnGenerateKey;
+    public JFXToggleButton togASMode;
+    public JFXToggleButton togUpload;
+    public JFXButton btnUpload;
+    public JFXTextField textOauth;
+    public JFXButton btnSymmetric;
+    public JFXButton btnAsymmetric;
 
     //Data
     private String sourceFile;
@@ -494,6 +510,40 @@ public class MainController implements Initializable, Deliver {
 
         setS1state(false);
         setS2state(false);
+    }
+
+    public void onClickedbtnSymmetric(MouseEvent mouseEvent) {
+        paneAsymmetric.setDisable(true);
+        paneAsymmetric.setVisible(false);
+
+        paneMainfunction.setDisable(false);
+        paneMainfunction.setVisible(true);
+    }
+
+    public void onClickedbtnAsymmetric(MouseEvent mouseEvent) {
+        paneMainfunction.setDisable(true);
+        paneMainfunction.setVisible(false);
+
+        paneAsymmetric.setDisable(false);
+
+        //pre work
+        textOauth.setDisable(true);
+        textOauth.setVisible(false);
+        btnSavekey.setDisable(true);
+
+        paneAsymmetric.setVisible(true);
+    }
+
+    public void onClickedSavetofile(MouseEvent mouseEvent) {
+    }
+
+    public void onClickbtnGenerate(MouseEvent mouseEvent) {
+    }
+
+    public void onClickedtogUpload(MouseEvent mouseEvent) {
+    }
+
+    public void onClickedUpload(MouseEvent mouseEvent) {
     }
 }
 

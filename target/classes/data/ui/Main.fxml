@@ -16,7 +16,19 @@
 
 <AnchorPane fx:id="basePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.viewv.controller.MainController">
    <children>
-      <AnchorPane fx:id="paneSide" layoutX="6.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="85.0" style="-fx-background-color: #03a9f4#03a9f4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane fx:id="paneSide" layoutX="6.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="89.0" style="-fx-background-color: #03a9f4#03a9f4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <JFXButton fx:id="btnSymmetric" layoutY="32.0" onMouseClicked="#onClickedbtnSymmetric" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #03a9f4;" text="Main" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btnAsymmetric" layoutY="76.0" onMouseClicked="#onClickedbtnAsymmetric" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #03a9f4#03a9f4 #03#03a9f4;" text="Key" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXButton>
+         </children></AnchorPane>
       <AnchorPane fx:id="paneMainfunction" layoutX="86.0" layoutY="75.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Separator layoutX="15.0" layoutY="67.0" prefHeight="15.0" prefWidth="487.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
@@ -112,28 +124,45 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneMainfunction1" layoutX="95.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="paneAsymmetric" layoutX="95.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Group layoutX="14.0" layoutY="80.0">
+            <Group layoutX="14.0" layoutY="70.0">
                <children>
-                  <JFXTextArea layoutY="17.0" prefHeight="177.0" prefWidth="235.0" />
-                  <Label text="Public Key">
+                  <JFXTextArea fx:id="arePublic" layoutY="17.0" prefHeight="177.0" prefWidth="235.0" />
+                  <Label fx:id="labPublic" text="Public Key">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
                </children>
             </Group>
-            <Group layoutX="258.0" layoutY="80.0">
+            <Group layoutX="258.0" layoutY="70.0" AnchorPane.rightAnchor="22.0">
                <children>
-                  <JFXTextArea layoutY="17.0" prefHeight="177.0" prefWidth="235.0" />
-                  <Label text="Private Key">
+                  <JFXTextArea fx:id="arePrivate" layoutY="17.0" prefHeight="177.0" prefWidth="235.0" />
+                  <Label fx:id="labPrivate" text="Private Key">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
                </children>
             </Group>
+            <Group layoutX="286.0" layoutY="282.0" AnchorPane.rightAnchor="22.0">
+               <children>
+                  <JFXButton fx:id="btnSavekey" layoutX="122.0" layoutY="1.0" onMouseClicked="#onClickedSavetofile" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Save" textFill="WHITE" />
+                  <JFXButton fx:id="btnGenerateKey" layoutY="2.0" onMouseClicked="#onClickbtnGenerate" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #5e35b1#5e35b1;" text="Generate" textFill="WHITE" />
+               </children>
+            </Group>
+            <JFXToggleButton fx:id="togASMode" layoutX="115.0" layoutY="1.0" prefHeight="60.0" prefWidth="147.0" text="Encrypt" />
+            <JFXToggleButton fx:id="togUpload" layoutY="269.0" onMouseClicked="#onClickedtogUpload" prefHeight="60.0" prefWidth="147.0" text="Upload" />
+            <JFXButton fx:id="btnUpload" layoutX="408.0" layoutY="345.0" onMouseClicked="#onClickedUpload" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #64dd17;" text="Upload" textFill="WHITE" AnchorPane.rightAnchor="22.0" />
+            <JFXTextField fx:id="textOauth" layoutX="14.0" layoutY="345.0" prefHeight="27.0" prefWidth="384.0" promptText="Github OAuth Key" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="115.0" />
+            <Label layoutX="15.0" layoutY="18.0" prefHeight="26.0" prefWidth="125.0" text="Asymmetric" AnchorPane.leftAnchor="15.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Separator layoutX="16.0" layoutY="51.0" prefHeight="0.0" prefWidth="485.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+            <Separator layoutX="252.0" layoutY="73.0" orientation="VERTICAL" prefHeight="186.0" prefWidth="5.0" AnchorPane.leftAnchor="252.0" AnchorPane.rightAnchor="258.0" />
          </children>
       </AnchorPane>
    </children>
