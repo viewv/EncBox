@@ -10,68 +10,73 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import top.viewv.api.PublishGithubGist;
 import top.viewv.model.mac.SHA;
 import top.viewv.model.symmetric.Decrypt;
 import top.viewv.model.symmetric.DecryptProgress;
 import top.viewv.model.symmetric.Encrypt;
 import top.viewv.model.symmetric.EncryptProgress;
+import top.viewv.model.tools.Base64Tool;
+import top.viewv.model.tools.GenerateKeyPair;
 import top.viewv.model.tools.GenerateSecKey;
 import top.viewv.model.tools.PasswordGenerate;
 
 import javax.crypto.SecretKey;
+import java.awt.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.SecureRandom;
-import java.security.Security;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable, Deliver {
 
+    private final SecureRandom secureRandom = new SecureRandom();
     // UI part
     public AnchorPane basePane;
     public AnchorPane paneSide;
     public AnchorPane paneMainfunction;
-
     public JFXButton btnOpenFile;
     public JFXToggleButton togModeChooser;
-
     public Label labFileAlert;
     public Label labFileinfo;
     public Label labAlgoAlert;
-
     public Group GroupAES;
     public Label labAlgoName;
     public Label labAlgoLength;
     public Label labAlgoMode;
     public Label labPadding;
-
     public Group GroupChaCha20;
     public Label labAlgoChaCha20;
     public Label labAlgoChaChaLength;
-
     public JFXComboBox<String> cboxAlgo;
     public JFXComboBox<Integer> cboxLength;
     public JFXComboBox<String> cboxMode;
     public JFXComboBox<String> cboxPadding;
-
     public JFXTextField textPassword;
     public JFXToggleButton togAead;
     public JFXTextField textAEAD;
-
     public Group GroupPassword;
     public JFXCheckBox chkSpecial;
     public JFXCheckBox chkUpper;
     public JFXSlider sldPasswordLength;
-
     public Label labProcess;
-
     public JFXButton btnChooseDir;
     public Label labFilepath;
     public JFXButton btnStart;
     public JFXProgressBar pbarProcess;
     public Label labFinalAlert;
-    
+
     // Asymmetric part this controller is really terrible
     public AnchorPane paneAsymmetric;
     public JFXTextArea arePublic;
@@ -86,28 +91,36 @@ public class MainController implements Initializable, Deliver {
     public JFXTextField textOauth;
     public JFXButton btnSymmetric;
     public JFXButton btnAsymmetric;
+    public JFXTextArea areURL;
+    public JFXButton btnOpenURL;
+    public Label labASalert;
+    public JFXToggleButton togASencdec;
+    public JFXButton btnASencdec;
 
     //Data
     private String sourceFile;
     private String sourceFilename;
     private String destFilepath;
-
     private String algorithm;
     private String mode;
     private String padding;
-
     private Integer length;
-
     private int passwordLength = 20;
     private int numOfSpecial = 0;
     private int numOfUpper = 0;
-
-    private final SecureRandom secureRandom = new SecureRandom();
-
     private long sourceFileLength = 1;
 
+    //work mode 0 enc 1 for dec
     private int workMode = 0;
+    // AS work mode
+    // 0 generate public key
+    // 1 enc mode
+    // 2 dec mode
+    private int asworkMode = 0;
 
+    private String publicURL;
+
+    //callback function start
     @Override
     public void deliver(long process) {
         pbarProcess.setProgress(process / sourceFileLength);
@@ -121,13 +134,13 @@ public class MainController implements Initializable, Deliver {
         if (message.equals("Error")) {
             labFinalAlert.setText("IO Error!");
         }
-        if (message.equals("IO Error")){
+        if (message.equals("IO Error")) {
             labFinalAlert.setText("IO Error");
         }
-        if (message.equals("Password Error")){
+        if (message.equals("Password Error")) {
             labFinalAlert.setText("Password Error");
         }
-        if (message.equals("Password Don't Match")){
+        if (message.equals("Password Don't Match")) {
             labFinalAlert.setText("Password Don't Match");
         }
         if (message.equals("OK")) {
@@ -139,6 +152,8 @@ public class MainController implements Initializable, Deliver {
             setS2state(true);
         }
     }
+
+    //
 
     // ugly start
     private void setS1state(boolean state) {
@@ -175,8 +190,9 @@ public class MainController implements Initializable, Deliver {
         btnStart.setDisable(state);
 
     }
-    //ugly end just very ugly, really sorry foe that
+    //callback function end
 
+    //ugly end just very ugly, really sorry foe that
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setS1state(true);
@@ -187,10 +203,13 @@ public class MainController implements Initializable, Deliver {
         cboxAlgo.getItems().add("ChaCha20");
 
         Security.addProvider(new BouncyCastleProvider());
+
+        paneAsymmetric.setVisible(false);
+        paneMainfunction.setVisible(true);
     }
 
     public void switchMode() {
-        if (togModeChooser.isSelected()){
+        if (togModeChooser.isSelected()) {
 
             togModeChooser.setText("Decrypt");
 
@@ -202,7 +221,7 @@ public class MainController implements Initializable, Deliver {
             textPassword.setDisable(false);
 
             btnStart.setDisable(true);
-        }else {
+        } else {
             togModeChooser.setText("Encrypt");
             workMode = 0;
         }
@@ -225,7 +244,7 @@ public class MainController implements Initializable, Deliver {
             labFileinfo.setText(filename);
             labFileAlert.setText(filepath);
 
-            if (workMode == 0){
+            if (workMode == 0) {
                 setS2state(true);
 
                 // after choose right AEAD mode will use this part
@@ -377,7 +396,7 @@ public class MainController implements Initializable, Deliver {
 
     public void setPassword() {
 
-        if (workMode == 0){
+        if (workMode == 0) {
             length = cboxLength.getValue();
             labAlgoLength.setText(length.toString());
 
@@ -498,10 +517,10 @@ public class MainController implements Initializable, Deliver {
             Platform.runLater(() -> encryptProgress.doEncrypt(sourceFile, sourceFilename, destfile,
                     algorithm, secretKey, finalIfAEAD, associatedBytes));
 
-        }else {
+        } else {
             Decrypt decrypt = new Decrypt();
-            DecryptProgress decryptProgress = new DecryptProgress(MainController.this,decrypt);
-            Platform.runLater(() -> decryptProgress.doDecrypt(sourceFile,destFilepath,password));
+            DecryptProgress decryptProgress = new DecryptProgress(MainController.this, decrypt);
+            Platform.runLater(() -> decryptProgress.doDecrypt(sourceFile, destFilepath, password));
 
         }
         btnStart.setDisable(true);
@@ -512,7 +531,7 @@ public class MainController implements Initializable, Deliver {
         setS2state(false);
     }
 
-    public void onClickedbtnSymmetric(MouseEvent mouseEvent) {
+    public void onClickedbtnSymmetric() {
         paneAsymmetric.setDisable(true);
         paneAsymmetric.setVisible(false);
 
@@ -520,7 +539,7 @@ public class MainController implements Initializable, Deliver {
         paneMainfunction.setVisible(true);
     }
 
-    public void onClickedbtnAsymmetric(MouseEvent mouseEvent) {
+    public void onClickedbtnAsymmetric() {
         paneMainfunction.setDisable(true);
         paneMainfunction.setVisible(false);
 
@@ -529,21 +548,256 @@ public class MainController implements Initializable, Deliver {
         //pre work
         textOauth.setDisable(true);
         textOauth.setVisible(false);
+
+        btnUpload.setDisable(true);
+        btnUpload.setVisible(false);
+
+        btnOpenURL.setDisable(true);
+        btnOpenURL.setVisible(false);
+
+        areURL.setDisable(true);
+        areURL.setVisible(false);
+
         btnSavekey.setDisable(true);
+
+        btnASencdec.setDisable(true);
+        btnASencdec.setVisible(false);
+
+        togASencdec.setVisible(false);
 
         paneAsymmetric.setVisible(true);
     }
 
-    public void onClickedSavetofile(MouseEvent mouseEvent) {
+    public void onClickedSavetofile() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+
+        File selectPath = directoryChooser.showDialog(null);
+
+        if (selectPath != null) {
+
+            try {
+                String publicKey = arePublic.getText();
+                String privateKey = arePrivate.getText();
+
+                BufferedWriter pubwriter = new BufferedWriter(new FileWriter(
+                        selectPath + File.separator + "encbox-public.txt"));
+                pubwriter.write(publicKey);
+
+                BufferedWriter priwriter = new BufferedWriter(new FileWriter(
+                        selectPath+File.separator+"encbox-private.txt"));
+
+                priwriter.write(privateKey);
+
+                pubwriter.close();
+                priwriter.close();
+
+                labASalert.setText("Save OK !");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
-    public void onClickbtnGenerate(MouseEvent mouseEvent) {
+    public void onClickbtnGenerate() {
+        KeyPair kp = GenerateKeyPair.generate("RSA",2048);
+
+        if (kp != null){
+
+            arePublic.clear();
+            arePrivate.clear();
+
+            labPublic.setText("Public Key");
+            labPrivate.setText("Private Key");
+
+            Key pk = kp.getPublic();
+            Key rk = kp.getPrivate();
+
+            String publickey = Base64Tool.tobase64(pk.getEncoded());
+            String privatekey = Base64Tool.tobase64(rk.getEncoded());
+
+            arePublic.setText(publickey);
+            arePrivate.setText(privatekey);
+
+            btnSavekey.setDisable(false);
+        }
     }
 
-    public void onClickedtogUpload(MouseEvent mouseEvent) {
+    public void onClickedtogUpload() {
+        if (togUpload.isSelected()) {
+            textOauth.setDisable(false);
+            textOauth.setVisible(true);
+
+            btnUpload.setDisable(false);
+            btnUpload.setVisible(true);
+
+            btnOpenURL.setVisible(false);
+            btnOpenURL.setDisable(true);
+
+            areURL.setVisible(false);
+            areURL.setDisable(true);
+
+        } else {
+            textOauth.setVisible(false);
+            textOauth.setDisable(true);
+
+            btnUpload.setVisible(false);
+            btnUpload.setDisable(true);
+        }
     }
 
-    public void onClickedUpload(MouseEvent mouseEvent) {
+    public void onClickedUpload() {
+        String oauth = textOauth.getText();
+        String publickey = arePublic.getText();
+
+        if (oauth != null && !oauth.equals("") && publickey != null && !publickey.equals("")) {
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+                Date date = new Date(System.currentTimeMillis());
+
+                //use date as description
+                String url = PublishGithubGist.publish(oauth,
+                        publickey, formatter.format(date), "Public Key", true);
+
+                if (url != null) {
+                    areURL.setDisable(false);
+                    areURL.setVisible(true);
+
+                    areURL.clear();
+                    areURL.setText(url);
+                    publicURL = url;
+
+                    btnOpenURL.setDisable(false);
+                    btnOpenURL.setVisible(true);
+
+                    labASalert.setText("Upload OK !");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void onClickedOpenURL() {
+        try {
+            if (publicURL != null){
+                Desktop.getDesktop().browse(new URI(publicURL));
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onClickedbtnASmode(MouseEvent mouseEvent) {
+        if (togASMode.isSelected()){
+            togASMode.setText("Crypto");
+
+            asworkMode = 1;
+
+            btnASencdec.setVisible(true);
+            btnASencdec.setDisable(false);
+
+            togUpload.setVisible(false);
+
+            togASencdec.setVisible(true);
+
+            btnGenerateKey.setDisable(true);
+
+            labPrivate.setText("Plain Text");
+
+        }else {
+            togASMode.setText("Generate");
+
+            asworkMode = 0;
+
+            btnASencdec.setVisible(false);
+            btnASencdec.setDisable(true);
+
+            togUpload.setVisible(true);
+
+            togASencdec.setVisible(false);
+
+            btnGenerateKey.setDisable(false);
+
+            labPublic.setText("Public Key");
+            labPrivate.setText("Private Key");
+        }
+    }
+
+    public void onClickedtogASencdec(MouseEvent mouseEvent) {
+        if (!togASencdec.isSelected()){
+            asworkMode = 1;
+
+            togASencdec.setText("Encrypt");
+
+            labPrivate.setText("Plain Text");
+            labPublic.setText("Public Key");
+        }else {
+            asworkMode = 2;
+
+            labPublic.setText("Cipher Text");
+
+            togASencdec.setText("Decrypt");
+
+            labPrivate.setText("Private Key");
+        }
+    }
+
+    public void onClickedbtnASencdec(MouseEvent mouseEvent) {
+        if (asworkMode == 1){
+            String publickey = arePublic.getText();
+            String plain = arePrivate.getText();
+
+            if (publickey != null && plain != null){
+                byte[] publickeyBytes = Base64Tool.tobytes(publickey);
+                try {
+                    KeyFactory kf = KeyFactory.getInstance("RSA","BC");
+
+                    X509EncodedKeySpec pkSpec = new X509EncodedKeySpec(publickeyBytes);
+                    PublicKey pk = kf.generatePublic(pkSpec);
+
+                    byte[] cipher = top.viewv.model.asymmetric.Encrypt.encrypt(plain.getBytes() ,"RSA",pk);
+
+                    labASalert.setText("Finish!");
+
+                    arePrivate.setText(Base64Tool.tobase64(cipher));
+
+                } catch (InvalidKeySpecException e) {
+                    e.printStackTrace();
+                    labASalert.setText("Illegal Public Key");
+                } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+                    e.printStackTrace();
+                    System.out.println("Panic!!! Provider Error!");
+                }
+
+            }
+        }else if (asworkMode == 2){
+            String privatekey = arePrivate.getText();
+            String cipher = arePublic.getText();
+
+            if (privatekey != null && cipher != null){
+                byte [] privatekeyBytes  = Base64Tool.tobytes(privatekey);
+
+                try {
+                    KeyFactory kf = KeyFactory.getInstance("RSA","BC");
+
+                    PKCS8EncodedKeySpec skSpec = new PKCS8EncodedKeySpec(privatekeyBytes);
+                    PrivateKey sk = kf.generatePrivate(skSpec);
+
+                    byte[] plain = top.viewv.model.asymmetric.Decrypt.decrypt(Base64Tool.tobytes(cipher),"RSA",sk);
+
+                    labASalert.setText("Finish");
+                    arePublic.setText(new String(plain, StandardCharsets.UTF_8));
+
+                } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+                    e.printStackTrace();
+                    System.out.println("Panic!!! Provider Error!");
+                } catch (InvalidKeySpecException e) {
+                    e.printStackTrace();
+                    labASalert.setText("Illegal Private Key");
+                }
+            }
+        }
     }
 }
 

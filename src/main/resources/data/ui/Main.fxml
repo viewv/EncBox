@@ -152,10 +152,10 @@
                   <JFXButton fx:id="btnGenerateKey" layoutY="2.0" onMouseClicked="#onClickbtnGenerate" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #5e35b1#5e35b1;" text="Generate" textFill="WHITE" />
                </children>
             </Group>
-            <JFXToggleButton fx:id="togASMode" layoutX="115.0" layoutY="1.0" prefHeight="60.0" prefWidth="147.0" text="Encrypt" />
-            <JFXToggleButton fx:id="togUpload" layoutY="269.0" onMouseClicked="#onClickedtogUpload" prefHeight="60.0" prefWidth="147.0" text="Upload" />
-            <JFXButton fx:id="btnUpload" layoutX="408.0" layoutY="345.0" onMouseClicked="#onClickedUpload" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #64dd17;" text="Upload" textFill="WHITE" AnchorPane.rightAnchor="22.0" />
-            <JFXTextField fx:id="textOauth" layoutX="14.0" layoutY="345.0" prefHeight="27.0" prefWidth="384.0" promptText="Github OAuth Key" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="115.0" />
+            <JFXToggleButton fx:id="togASMode" layoutX="105.0" layoutY="1.0" onMouseClicked="#onClickedbtnASmode" prefHeight="60.0" prefWidth="147.0" text="Generate" />
+            <JFXToggleButton fx:id="togUpload" layoutX="-15.0" layoutY="269.0" onMouseClicked="#onClickedtogUpload" prefHeight="50.0" prefWidth="147.0" text="Upload" />
+            <JFXButton fx:id="btnUpload" layoutX="406.0" layoutY="356.0" onMouseClicked="#onClickedUpload" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #64dd17;" text="Upload" textFill="WHITE" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="22.0" />
+            <JFXTextField fx:id="textOauth" layoutX="13.0" layoutY="356.0" prefHeight="27.0" prefWidth="384.0" promptText="Github OAuth Key" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="115.0" />
             <Label layoutX="15.0" layoutY="18.0" prefHeight="26.0" prefWidth="125.0" text="Asymmetric" AnchorPane.leftAnchor="15.0">
                <font>
                   <Font size="20.0" />
@@ -163,6 +163,15 @@
             </Label>
             <Separator layoutX="16.0" layoutY="51.0" prefHeight="0.0" prefWidth="485.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
             <Separator layoutX="252.0" layoutY="73.0" orientation="VERTICAL" prefHeight="186.0" prefWidth="5.0" AnchorPane.leftAnchor="252.0" AnchorPane.rightAnchor="258.0" />
+            <JFXTextArea fx:id="areURL" layoutX="15.0" layoutY="324.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="385.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="115.0" AnchorPane.topAnchor="324.0" />
+            <JFXButton fx:id="btnOpenURL" layoutX="406.0" layoutY="322.0" onMouseClicked="#onClickedOpenURL" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #ec407a#ec407a;" text="Open" textFill="WHITE" AnchorPane.bottomAnchor="48.0" AnchorPane.rightAnchor="22.0" />
+            <Label fx:id="labASalert" alignment="CENTER_RIGHT" layoutX="346.0" layoutY="22.0" prefHeight="18.0" prefWidth="147.0" text="Welcome !" textAlignment="RIGHT" AnchorPane.leftAnchor="346.0" AnchorPane.rightAnchor="22.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <JFXToggleButton fx:id="togASencdec" layoutX="229.0" layoutY="1.0" onMouseClicked="#onClickedtogASencdec" text="Encrypt" />
+            <JFXButton fx:id="btnASencdec" layoutX="164.0" layoutY="284.0" onMouseClicked="#onClickedbtnASencdec" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Start" textFill="WHITE" />
          </children>
       </AnchorPane>
    </children>
