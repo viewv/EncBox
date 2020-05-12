@@ -24,9 +24,7 @@ public class GenerateKeyPairTest {
         System.out.println(rk);
         System.out.println("Private Key Length: " + privateKey.getEncoded().length);
 
-        String currentPath = System.getProperty("user.dir");
-        String path = currentPath + "/src/test/java/";
-
-
+        //String currentPath = System.getProperty("user.dir");
+        //String path = currentPath + "/src/test/java/";
     }
 }

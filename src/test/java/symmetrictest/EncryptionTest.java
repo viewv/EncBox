@@ -1,8 +1,8 @@
 package symmetrictest;
 
 import top.viewv.model.mac.SHA;
-import top.viewv.model.symmetric.Encrypt;
-import top.viewv.model.symmetric.EncryptProgress;
+// import top.viewv.model.symmetric.Encrypt;
+// import top.viewv.model.symmetric.EncryptProgress;
 import top.viewv.model.tools.Base64Tool;
 import top.viewv.model.tools.GenerateSecKey;
 
@@ -42,5 +42,8 @@ public class EncryptionTest {
 
         System.out.println("Security Key");
         System.out.println(Base64Tool.tobase64(secretKey.getEncoded()));
+        System.out.println("Hash Code");
+        System.out.println(Base64Tool.tobase64(hashcode));
+        
     }
 }
