@@ -1,3 +1,5 @@
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/viewv/EncBox) 
+
 # EncBox
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fviewv%2FEncBox.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fviewv%2FEncBox?ref=badge_shield)  ![Java CI with Maven](https://github.com/viewv/EncBox/workflows/Java%20CI%20with%20Maven/badge.svg)
 
