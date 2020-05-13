@@ -486,24 +486,23 @@ public class MainController implements Initializable, Deliver {
 
             String destfile = destFilepath + File.separator + sourceFilename.substring(0, sourceFilename.lastIndexOf(".")) + ".enc";
 
-            byte[] associatedBytes;
-
-            if (togAead.isSelected()) {
-                associateData = textAEAD.getText();
-                associatedBytes = associateData.getBytes();
-            } else {
-                try {
-                    associatedBytes = SHA.digest(sourceFile, "3/512");
-                } catch (IOException e) {
-                    labFinalAlert.setText("Source File Broken!");
-                    return;
-                }
-            }
+            byte[] associatedBytes = new byte[0];
 
             boolean ifAEAD = false;
 
             if (algorithm.equals("ChaCha20") || mode.equals("GCM") || mode.equals("CCM")) {
                 ifAEAD = true;
+                if (togAead.isSelected()) {
+                    associateData = textAEAD.getText();
+                    associatedBytes = associateData.getBytes();
+                }else {
+                    try {
+                        associatedBytes = SHA.digest(sourceFile, "3/512");
+                    }catch (IOException e) {
+                        labFinalAlert.setText("Source File Broken!");
+                        return;
+                    }
+                }
             }
 
             if (algorithm.equals("ChaCha20")) {
@@ -514,8 +513,9 @@ public class MainController implements Initializable, Deliver {
             }
 
             boolean finalIfAEAD = ifAEAD;
+            byte[] finalAssociatedBytes = associatedBytes;
             Platform.runLater(() -> encryptProgress.doEncrypt(sourceFile, sourceFilename, destfile,
-                    algorithm, secretKey, finalIfAEAD, associatedBytes));
+                    algorithm, secretKey, finalIfAEAD, finalAssociatedBytes));
 
         } else {
             Decrypt decrypt = new Decrypt();
