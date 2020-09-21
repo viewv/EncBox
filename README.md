@@ -8,13 +8,13 @@
 
 A easy to use encrypting software also provide an asymmetric encryption solution for normal user.
 
-![Screen Shot 2020-09-21 at 19.45.41](https://gitee.com/zxnnet/upic/raw/master/uPic/Screen%20Shot%202020-09-21%20at%2019.45.41.png)
+![Screen Shot 2020-09-21 at 19.45.41](https://gitee.com/zxnnet/upic/raw/master/uPic/Screen%20Shot%202020-09-21%20at%2019.45.41.png)  
 
-<center>Main page</center>
+<p align="center">Main Page</p>
 
-![Screen Shot 2020-09-21 at 19.42.18](https://gitee.com/zxnnet/upic/raw/master/uPic/Screen%20Shot%202020-09-21%20at%2019.42.18.png)
+![Screen Shot 2020-09-21 at 19.42.18](https://gitee.com/zxnnet/upic/raw/master/uPic/Screen%20Shot%202020-09-21%20at%2019.42.18.png)  
 
-<center>key page</center>
+<p align="center">key Page</p>
 
 ## How to run EncBox?
 
