@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>15</version>
+            <version>15.0.1</version>
         </dependency>
 
         <dependency>
