@@ -192,7 +192,7 @@ public class MainController implements Initializable, Deliver {
     }
     //callback function end
 
-    //ugly end just very ugly, really sorry foe that
+    //ugly, just very ugly, really sorry for that
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setS1state(true);
