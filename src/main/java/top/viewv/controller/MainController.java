@@ -2,9 +2,7 @@ package top.viewv.controller;
 
 import com.jfoenix.controls.*;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -14,7 +12,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import top.viewv.api.PublishGithubGist;
-import top.viewv.model.mac.SHA;
+import top.viewv.model.mac.SHATask;
 import top.viewv.model.symmetric.*;
 import top.viewv.model.tools.Base64Tool;
 import top.viewv.model.tools.GenerateKeyPair;
@@ -123,7 +121,7 @@ public class MainController implements Initializable, Deliver {
     //callback function start
     @Override
     public void deliver(long process) {
-        float result = (float)process / (float) sourceFileLength;
+        float result = (float) process / (float) sourceFileLength;
         pbarProcess.setProgress(result);
         int p = (int) (result) * 100;
         labProcess.setText(p + "%");
@@ -482,7 +480,7 @@ public class MainController implements Initializable, Deliver {
 
             String destfile = destFilepath + File.separator + sourceFilename.substring(0, sourceFilename.lastIndexOf(".")) + ".enc";
 
-            byte[] associatedBytes = new byte[0];
+            final byte[][] associatedBytes = {new byte[0]};
 
             boolean ifAEAD = false;
 
@@ -490,13 +488,22 @@ public class MainController implements Initializable, Deliver {
                 ifAEAD = true;
                 if (togAead.isSelected()) {
                     associateData = textAEAD.getText();
-                    associatedBytes = associateData.getBytes();
-                }else {
-                    try {
-                        //TODO SHA really time problem
-                        associatedBytes = SHA.digest(sourceFile, "3/512");
-                    }catch (IOException e) {
-                        labFinalAlert.setText("Source File Broken!");
+                    associatedBytes[0] = associateData.getBytes();
+                } else {
+                    labFinalAlert.setText("Start Hash...");
+                    SHATask shaTask = new SHATask();
+                    shaTask.setValue(sourceFile, "3/512");
+                    pbarProcess.progressProperty().unbind();
+                    pbarProcess.progressProperty().bind(shaTask.progressProperty());
+                    shaTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                            event -> {
+                                byte[] bytes = shaTask.getValue();
+                                associatedBytes[0] = bytes;
+                            });
+
+                    new Thread(shaTask).start();
+                    if (associatedBytes[0] == null) {
+                        labFinalAlert.setText("File is broken!");
                         return;
                     }
                 }
@@ -510,21 +517,17 @@ public class MainController implements Initializable, Deliver {
             }
 
             boolean finalIfAEAD = ifAEAD;
-            byte[] finalAssociatedBytes = associatedBytes;
+            byte[] finalAssociatedBytes = associatedBytes[0];
 
+            labFinalAlert.setText("Start Encrypt...");
             EncryptTask encryptTask = new EncryptTask();
-            encryptTask.setValue(sourceFile,sourceFilename,sourceFileLength,destfile,algorithm,secretKey,finalIfAEAD,finalAssociatedBytes);
+            encryptTask.setValue(sourceFile, sourceFilename, sourceFileLength, destfile, algorithm, secretKey, finalIfAEAD, finalAssociatedBytes);
 
             pbarProcess.progressProperty().unbind();
             pbarProcess.progressProperty().bind(encryptTask.progressProperty());
 
             encryptTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent event) {
-                            System.out.println("Pbar success!");
-                        }
-                    });
+                    event -> System.out.println("Enc success!"));
 
             new Thread(encryptTask).start();
 
@@ -595,7 +598,7 @@ public class MainController implements Initializable, Deliver {
                 pubwriter.write(publicKey);
 
                 BufferedWriter priwriter = new BufferedWriter(new FileWriter(
-                        selectPath+File.separator+"encbox-private.txt"));
+                        selectPath + File.separator + "encbox-private.txt"));
 
                 priwriter.write(privateKey);
 
@@ -611,9 +614,9 @@ public class MainController implements Initializable, Deliver {
     }
 
     public void onClickbtnGenerate() {
-        KeyPair kp = GenerateKeyPair.generate("RSA",2048);
+        KeyPair kp = GenerateKeyPair.generate("RSA", 2048);
 
-        if (kp != null){
+        if (kp != null) {
 
             arePublic.clear();
             arePrivate.clear();
@@ -691,7 +694,7 @@ public class MainController implements Initializable, Deliver {
 
     public void onClickedOpenURL() {
         try {
-            if (publicURL != null){
+            if (publicURL != null) {
                 Desktop.getDesktop().browse(new URI(publicURL));
             }
         } catch (IOException | URISyntaxException e) {
@@ -700,7 +703,7 @@ public class MainController implements Initializable, Deliver {
     }
 
     public void onClickedbtnASmode(MouseEvent mouseEvent) {
-        if (togASMode.isSelected()){
+        if (togASMode.isSelected()) {
             togASMode.setText("Crypto");
 
             asworkMode = 1;
@@ -716,7 +719,7 @@ public class MainController implements Initializable, Deliver {
 
             labPrivate.setText("Plain Text");
 
-        }else {
+        } else {
             togASMode.setText("Generate");
 
             asworkMode = 0;
@@ -736,14 +739,14 @@ public class MainController implements Initializable, Deliver {
     }
 
     public void onClickedtogASencdec(MouseEvent mouseEvent) {
-        if (!togASencdec.isSelected()){
+        if (!togASencdec.isSelected()) {
             asworkMode = 1;
 
             togASencdec.setText("Encrypt");
 
             labPrivate.setText("Plain Text");
             labPublic.setText("Public Key");
-        }else {
+        } else {
             asworkMode = 2;
 
             labPublic.setText("Cipher Text");
@@ -755,19 +758,19 @@ public class MainController implements Initializable, Deliver {
     }
 
     public void onClickedbtnASencdec(MouseEvent mouseEvent) {
-        if (asworkMode == 1){
+        if (asworkMode == 1) {
             String publickey = arePublic.getText();
             String plain = arePrivate.getText();
 
-            if (publickey != null && plain != null){
+            if (publickey != null && plain != null) {
                 byte[] publickeyBytes = Base64Tool.tobytes(publickey);
                 try {
-                    KeyFactory kf = KeyFactory.getInstance("RSA","BC");
+                    KeyFactory kf = KeyFactory.getInstance("RSA", "BC");
 
                     X509EncodedKeySpec pkSpec = new X509EncodedKeySpec(publickeyBytes);
                     PublicKey pk = kf.generatePublic(pkSpec);
 
-                    byte[] cipher = top.viewv.model.asymmetric.Encrypt.encrypt(plain.getBytes() ,"RSA",pk);
+                    byte[] cipher = top.viewv.model.asymmetric.Encrypt.encrypt(plain.getBytes(), "RSA", pk);
 
                     labASalert.setText("Finish!");
 
@@ -782,20 +785,20 @@ public class MainController implements Initializable, Deliver {
                 }
 
             }
-        }else if (asworkMode == 2){
+        } else if (asworkMode == 2) {
             String privatekey = arePrivate.getText();
             String cipher = arePublic.getText();
 
-            if (privatekey != null && cipher != null){
-                byte [] privatekeyBytes  = Base64Tool.tobytes(privatekey);
+            if (privatekey != null && cipher != null) {
+                byte[] privatekeyBytes = Base64Tool.tobytes(privatekey);
 
                 try {
-                    KeyFactory kf = KeyFactory.getInstance("RSA","BC");
+                    KeyFactory kf = KeyFactory.getInstance("RSA", "BC");
 
                     PKCS8EncodedKeySpec skSpec = new PKCS8EncodedKeySpec(privatekeyBytes);
                     PrivateKey sk = kf.generatePrivate(skSpec);
 
-                    byte[] plain = top.viewv.model.asymmetric.Decrypt.decrypt(Base64Tool.tobytes(cipher),"RSA",sk);
+                    byte[] plain = top.viewv.model.asymmetric.Decrypt.decrypt(Base64Tool.tobytes(cipher), "RSA", sk);
 
                     labASalert.setText("Finish");
                     arePublic.setText(new String(plain, StandardCharsets.UTF_8));

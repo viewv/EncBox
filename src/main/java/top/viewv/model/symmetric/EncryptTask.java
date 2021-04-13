@@ -175,5 +175,4 @@ public class EncryptTask extends Task<Void> {
 
         return null;
     }
-
 }
