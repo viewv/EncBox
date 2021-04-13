@@ -2,6 +2,9 @@ package top.viewv.controller;
 
 import com.jfoenix.controls.*;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -12,10 +15,7 @@ import javafx.stage.FileChooser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import top.viewv.api.PublishGithubGist;
 import top.viewv.model.mac.SHA;
-import top.viewv.model.symmetric.Decrypt;
-import top.viewv.model.symmetric.DecryptProgress;
-import top.viewv.model.symmetric.Encrypt;
-import top.viewv.model.symmetric.EncryptProgress;
+import top.viewv.model.symmetric.*;
 import top.viewv.model.tools.Base64Tool;
 import top.viewv.model.tools.GenerateKeyPair;
 import top.viewv.model.tools.GenerateSecKey;
@@ -123,10 +123,10 @@ public class MainController implements Initializable, Deliver {
     //callback function start
     @Override
     public void deliver(long process) {
-        pbarProcess.setProgress(process / sourceFileLength);
-        int p = (int) (process / sourceFileLength) * 100;
+        float result = (float)process / (float) sourceFileLength;
+        pbarProcess.setProgress(result);
+        int p = (int) (result) * 100;
         labProcess.setText(p + "%");
-        System.out.println(process);
     }
 
     @Override
@@ -152,8 +152,6 @@ public class MainController implements Initializable, Deliver {
             setS2state(true);
         }
     }
-
-    //
 
     // ugly start
     private void setS1state(boolean state) {
@@ -479,8 +477,6 @@ public class MainController implements Initializable, Deliver {
 
             labFinalAlert.setText("");
 
-            Encrypt encrypt = new Encrypt();
-            EncryptProgress encryptProgress = new EncryptProgress(MainController.this, encrypt);
             SecretKey secretKey = GenerateSecKey.generateKey(password, length, 65566,
                     1, "AES");
 
@@ -497,6 +493,7 @@ public class MainController implements Initializable, Deliver {
                     associatedBytes = associateData.getBytes();
                 }else {
                     try {
+                        //TODO SHA really time problem
                         associatedBytes = SHA.digest(sourceFile, "3/512");
                     }catch (IOException e) {
                         labFinalAlert.setText("Source File Broken!");
@@ -514,8 +511,22 @@ public class MainController implements Initializable, Deliver {
 
             boolean finalIfAEAD = ifAEAD;
             byte[] finalAssociatedBytes = associatedBytes;
-            Platform.runLater(() -> encryptProgress.doEncrypt(sourceFile, sourceFilename, destfile,
-                    algorithm, secretKey, finalIfAEAD, finalAssociatedBytes));
+
+            EncryptTask encryptTask = new EncryptTask();
+            encryptTask.setValue(sourceFile,sourceFilename,sourceFileLength,destfile,algorithm,secretKey,finalIfAEAD,finalAssociatedBytes);
+
+            pbarProcess.progressProperty().unbind();
+            pbarProcess.progressProperty().bind(encryptTask.progressProperty());
+
+            encryptTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                    new EventHandler<WorkerStateEvent>() {
+                        @Override
+                        public void handle(WorkerStateEvent event) {
+                            System.out.println("Pbar success!");
+                        }
+                    });
+
+            new Thread(encryptTask).start();
 
         } else {
             Decrypt decrypt = new Decrypt();

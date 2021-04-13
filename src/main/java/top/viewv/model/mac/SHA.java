@@ -85,7 +85,7 @@ public class SHA {
 
             System.out.println(partialHash.length);
             System.out.println(endTime - startTime);
-            System.out.println(hexString.toString());
+            System.out.println(hexString);
 
             return partialHash;
 

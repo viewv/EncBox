@@ -1,4 +1,4 @@
-package top.viewv.api;
+package top.viewv.model.tools;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
