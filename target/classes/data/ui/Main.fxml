@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="basePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.viewv.controller.MainController">
+<AnchorPane fx:id="basePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="top.viewv.controller.MainController">
    <children>
       <AnchorPane fx:id="paneSide" layoutX="6.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="89.0" style="-fx-background-color: #03a9f4#03a9f4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -24,6 +24,11 @@
                </font>
             </JFXButton>
             <JFXButton fx:id="btnAsymmetric" layoutY="76.0" onMouseClicked="#onClickedbtnAsymmetric" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #03a9f4#03a9f4 #03#03a9f4;" text="Key" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btnPassword" layoutX="4.0" layoutY="118.0" onMouseClicked="#onClickedbtnAsymmetric" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #03a9f4#03a9f4 #03#03a9f4;" text="Password" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
@@ -124,7 +129,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneAsymmetric" layoutX="95.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="paneAsymmetric" layoutX="95.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Group layoutX="14.0" layoutY="70.0">
                <children>
@@ -172,6 +177,16 @@
             </Label>
             <JFXToggleButton fx:id="togASencdec" layoutX="229.0" layoutY="1.0" onMouseClicked="#onClickedtogASencdec" text="Encrypt" />
             <JFXButton fx:id="btnASencdec" layoutX="164.0" layoutY="284.0" onMouseClicked="#onClickedbtnASencdec" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #29b6f6#29b6f6;" text="Start" textFill="WHITE" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="panePassword" layoutX="89.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="515.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="15.0" layoutY="18.0" prefHeight="26.0" prefWidth="196.0" text="Password Manager" AnchorPane.leftAnchor="15.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Separator layoutX="16.0" layoutY="51.0" prefHeight="0.0" prefWidth="485.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
          </children>
       </AnchorPane>
    </children>
