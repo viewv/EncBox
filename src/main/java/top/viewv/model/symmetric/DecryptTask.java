@@ -1,24 +1,39 @@
 package top.viewv.model.symmetric;
 
+import javafx.concurrent.Task;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import top.viewv.model.tools.GenerateSecKey;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.*;
+import java.security.Security;
 
-public class Decrypt {
+public class DecryptTask extends Task<Void> {
 
     public static final int EOF = -1;
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    public void decrypt(String sourcefile, String destfilepath, String password) throws InvalidKeyException, IOException, NoSuchAlgorithmException, NoSuchProviderException,
-            NoSuchPaddingException, InvalidAlgorithmParameterException {
+    String sourcefile;
+    long sourcefileLength;
+    String destfilepath;
+    String password;
+
+    public void setValue(String sourcefile, long sourcefileLength,String destfilepath, String password){
+        this.sourcefile = sourcefile;
+        this.sourcefileLength = sourcefileLength;
+        this.destfilepath = destfilepath;
+        this.password = password;
+    }
+
+    @Override
+    protected Void call() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
 
         try {
@@ -137,6 +152,7 @@ public class Decrypt {
             while (EOF != (n = is.read(buffer))) {
                 out.write(buffer, 0, n);
                 count += n;
+                this.updateProgress(count,sourcefileLength);
             }
 
             is.close();
@@ -147,5 +163,7 @@ public class Decrypt {
             e.printStackTrace();
             throw new NegativeArraySizeException("Password Don't match");
         }
+
+        return null;
     }
 }

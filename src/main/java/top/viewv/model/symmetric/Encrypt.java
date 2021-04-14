@@ -16,7 +16,7 @@ public class Encrypt {
     public static final int EOF = -1;
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    public void encrypt(CallBack callBack, String sourcefilepath, String sourcefilename, String destfile, String algorithm,
+    public void encrypt(String sourcefilepath, String sourcefilename, String destfile, String algorithm,
                         SecretKey secretKey, Boolean ifAEAD, byte[] associatedData) throws IOException {
 
         Security.addProvider(new BouncyCastleProvider());
@@ -146,7 +146,6 @@ public class Encrypt {
             while (EOF != (n = is.read(buffer))) {
                 out.write(buffer, 0, n);
                 count += n;
-                callBack.report(count);
             }
 
             is.close();
@@ -154,9 +153,6 @@ public class Encrypt {
             body.close();
 
             System.out.println("Encryption Finish!");
-
-            //Lazy use -10 to report OK may be maybe their will be more code
-            callBack.report(-10);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | InvalidKeyException
                 | InvalidParameterSpecException e) {

@@ -1,7 +1,6 @@
 package top.viewv.controller;
 
 import com.jfoenix.controls.*;
-import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -37,7 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable, Deliver {
+public class MainController implements Initializable{
 
     private final SecureRandom secureRandom = new SecureRandom();
     // UI part
@@ -117,39 +116,6 @@ public class MainController implements Initializable, Deliver {
     private int asworkMode = 0;
 
     private String publicURL;
-
-    //callback function start
-    @Override
-    public void deliver(long process) {
-        float result = (float) process / (float) sourceFileLength;
-        pbarProcess.setProgress(result);
-        int p = (int) (result) * 100;
-        labProcess.setText(p + "%");
-    }
-
-    @Override
-    public void reply(String message) {
-        if (message.equals("Error")) {
-            labFinalAlert.setText("IO Error!");
-        }
-        if (message.equals("IO Error")) {
-            labFinalAlert.setText("IO Error");
-        }
-        if (message.equals("Password Error")) {
-            labFinalAlert.setText("Password Error");
-        }
-        if (message.equals("Password Don't Match")) {
-            labFinalAlert.setText("Password Don't Match");
-        }
-        if (message.equals("OK")) {
-            labFinalAlert.setText("All Done!");
-
-            btnStart.setDisable(false);
-            labProcess.setText("S3");
-            setS1state(true);
-            setS2state(true);
-        }
-    }
 
     // ugly start
     private void setS1state(boolean state) {
@@ -527,15 +493,26 @@ public class MainController implements Initializable, Deliver {
             pbarProcess.progressProperty().bind(encryptTask.progressProperty());
 
             encryptTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    event -> System.out.println("Enc success!"));
+                    event ->{
+                        System.out.println("Enc success!");
+                        setS1state(true);
+                        setS3state(false);
+                    });
 
             new Thread(encryptTask).start();
 
         } else {
-            Decrypt decrypt = new Decrypt();
-            DecryptProgress decryptProgress = new DecryptProgress(MainController.this, decrypt);
-            Platform.runLater(() -> decryptProgress.doDecrypt(sourceFile, destFilepath, password));
+            DecryptTask decryptTask = new DecryptTask();
+            decryptTask.setValue(sourceFile,sourceFileLength,destFilepath,password);
+            pbarProcess.progressProperty().unbind();
+            pbarProcess.progressProperty().bind(decryptTask.progressProperty());
 
+            decryptTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                    event -> {
+                        System.out.println("Dec success!");
+                    });
+
+            new Thread(decryptTask).start();
         }
         btnStart.setDisable(true);
 
