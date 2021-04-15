@@ -43,6 +43,7 @@ public class MainController implements Initializable{
     public AnchorPane basePane;
     public AnchorPane paneSide;
     public AnchorPane paneMainfunction;
+    public AnchorPane panePassword;
     public JFXButton btnOpenFile;
     public JFXToggleButton togModeChooser;
     public Label labFileAlert;
@@ -168,6 +169,7 @@ public class MainController implements Initializable{
 
         paneAsymmetric.setVisible(false);
         paneMainfunction.setVisible(true);
+        panePassword.setVisible(false);
     }
 
     public void switchMode() {
@@ -526,6 +528,9 @@ public class MainController implements Initializable{
         paneAsymmetric.setDisable(true);
         paneAsymmetric.setVisible(false);
 
+        panePassword.setDisable(true);
+        panePassword.setVisible(false);
+
         paneMainfunction.setDisable(false);
         paneMainfunction.setVisible(true);
     }
@@ -534,7 +539,11 @@ public class MainController implements Initializable{
         paneMainfunction.setDisable(true);
         paneMainfunction.setVisible(false);
 
+        panePassword.setDisable(true);
+        panePassword.setVisible(false);
+
         paneAsymmetric.setDisable(false);
+        paneAsymmetric.setVisible(true);
 
         //pre work
         textOauth.setDisable(true);
@@ -557,6 +566,18 @@ public class MainController implements Initializable{
         togASencdec.setVisible(false);
 
         paneAsymmetric.setVisible(true);
+    }
+
+
+    public void onClickedbtnPassword(MouseEvent mouseEvent) {
+        paneMainfunction.setDisable(true);
+        paneMainfunction.setVisible(false);
+
+        paneAsymmetric.setDisable(true);
+        paneAsymmetric.setVisible(false);
+
+        panePassword.setDisable(false);
+        panePassword.setVisible(true);
     }
 
     public void onClickedSavetofile() {
