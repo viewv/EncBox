@@ -10,6 +10,7 @@
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -28,7 +29,7 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="btnPassword" layoutX="4.0" layoutY="118.0" onMouseClicked="#onClickedbtnAsymmetric" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #03a9f4#03a9f4 #03#03a9f4;" text="Password" textFill="WHITE">
+            <JFXButton fx:id="btnPassword" layoutX="4.0" layoutY="122.0" onMouseClicked="#onClickedbtnPassword" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #03a9f4#03a9f4 #03#03a9f4;" text="Password" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font size="14.0" />
                </font>
@@ -187,6 +188,29 @@
                </font>
             </Label>
             <Separator layoutX="16.0" layoutY="51.0" prefHeight="0.0" prefWidth="485.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+            <JFXToggleButton fx:id="togLocker" layoutX="353.0" layoutY="1.0" onMouseClicked="#switchLock" prefHeight="60.0" prefWidth="147.0" text="Locked" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane fx:id="paneLocked" layoutX="15.0" layoutY="60.0" prefHeight="332.0" prefWidth="485.0" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="60.0">
+               <children>
+                  <Label layoutX="173.0" layoutY="135.0" text="Locked" textFill="#0000005a">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="paneUnlocked" layoutX="25.0" layoutY="70.0" prefHeight="332.0" prefWidth="485.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="60.0">
+               <children>
+                  <Group layoutX="233.0" layoutY="283.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <JFXButton fx:id="btnPasswordAdd" layoutX="68.0" onMouseClicked="#addpassword" prefHeight="27.0" prefWidth="54.0" style="-fx-background-color: #e91e63#e91e63;" text="Add" textFill="WHITE" />
+                        <JFXButton fx:id="btnPasswordImport" layoutX="134.5" onMouseClicked="#importpassword" style="-fx-background-color: #4a148c#4a148c;" text="import" textFill="WHITE" />
+                        <JFXButton fx:id="btnPasswordExport" layoutX="198.5" onMouseClicked="#export" style="-fx-background-color: #29b6f6#29b6f6 #29b6f6#29b6f6;" text="Export" textFill="WHITE" />
+                        <JFXButton fx:id="btnPasswordSetting" prefHeight="22.0" prefWidth="57.0" style="-fx-background-color: #757575#757575;" text="Setting" textFill="WHITE" />
+                     </children>
+                  </Group>
+                  <ListView fx:id="passwordList" prefHeight="270.0" prefWidth="485.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>

@@ -9,18 +9,22 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 public class PMSerialize {
-    public void serialize(PMStorage pmStorage, String destfilename) throws FileNotFoundException {
+    public static void serialize(PMStorage pmStorage, String destfilename) throws FileNotFoundException {
         Kryo kryo = new Kryo();
         kryo.register(PMStorage.class);
+        kryo.register(java.util.HashMap.class);
+        kryo.register(String.class);
 
         Output output = new Output(new FileOutputStream(destfilename));
         kryo.writeObject(output, pmStorage);
         output.close();
     }
 
-    public PMStorage deserialize(String sourcefilename) throws FileNotFoundException {
+    public static PMStorage deserialize(String sourcefilename) throws FileNotFoundException {
         Kryo kryo = new Kryo();
         kryo.register(PMStorage.class);
+        kryo.register(java.util.HashMap.class);
+        kryo.register(String.class);
 
         Input input = new Input(new FileInputStream(sourcefilename));
         PMStorage pmStorage = kryo.readObject(input, PMStorage.class);

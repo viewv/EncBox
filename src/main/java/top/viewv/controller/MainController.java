@@ -3,27 +3,29 @@ package top.viewv.controller;
 import com.jfoenix.controls.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import top.viewv.api.PublishGithubGist;
 import top.viewv.model.mac.SHATask;
-import top.viewv.model.symmetric.*;
-import top.viewv.model.tools.Base64Tool;
-import top.viewv.model.tools.GenerateKeyPair;
-import top.viewv.model.tools.GenerateSecKey;
-import top.viewv.model.tools.PasswordGenerate;
+import top.viewv.model.passwordmanager.PMSerialize;
+import top.viewv.model.passwordmanager.PMStorage;
+import top.viewv.model.symmetric.DecryptTask;
+import top.viewv.model.symmetric.EncryptTask;
+import top.viewv.model.tools.*;
 
 import javax.crypto.SecretKey;
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -34,6 +36,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable{
@@ -94,6 +97,7 @@ public class MainController implements Initializable{
     public Label labASalert;
     public JFXToggleButton togASencdec;
     public JFXButton btnASencdec;
+    public VBox itemContainer;
 
     //Data
     private String sourceFile;
@@ -107,6 +111,9 @@ public class MainController implements Initializable{
     private int numOfSpecial = 0;
     private int numOfUpper = 0;
     private long sourceFileLength = 1;
+
+    //password
+    private PMStorage currentStorage;
 
     //work mode 0 enc 1 for dec
     private int workMode = 0;
@@ -333,7 +340,6 @@ public class MainController implements Initializable{
         cboxLength.setDisable(false);
     }
 
-
     public void selectLength() {
 
         cboxLength.getItems().clear();
@@ -356,7 +362,6 @@ public class MainController implements Initializable{
         chkUpper.setDisable(false);
         sldPasswordLength.setDisable(false);
     }
-
 
     public void setPassword() {
 
@@ -403,7 +408,6 @@ public class MainController implements Initializable{
             textAEAD.setDisable(true);
         }
     }
-
 
     public void onClickedChooseDir() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -567,7 +571,6 @@ public class MainController implements Initializable{
 
         paneAsymmetric.setVisible(true);
     }
-
 
     public void onClickedbtnPassword(MouseEvent mouseEvent) {
         paneMainfunction.setDisable(true);
@@ -810,5 +813,161 @@ public class MainController implements Initializable{
                 }
             }
         }
+    }
+
+    public void addpassword(MouseEvent mouseEvent) {
+    }
+
+    public void importpassword(MouseEvent mouseEvent) {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null){
+            try {
+                javafx.scene.control.Dialog<String> dialog = new Dialog<>();
+                dialog.setTitle("Unlock");
+                dialog.setHeaderText("Enter your volume password");
+
+                ButtonType buttonType = new ButtonType("Unlock", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().addAll(buttonType, ButtonType.CANCEL);
+
+                GridPane gridPane = new GridPane();
+                gridPane.setHgap(10);
+                gridPane.setVgap(10);
+                gridPane.setPadding(new Insets(20, 20, 10, 10));
+
+                PasswordField pwd = new PasswordField();
+                pwd.setPromptText("password");
+
+                gridPane.add(new Label("Password:"), 0, 0);
+                gridPane.add(pwd, 1, 0);
+
+                dialog.getDialogPane().setContent(gridPane);
+
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == buttonType) {
+                        return pwd.getText();
+                    }
+                    return null;
+                });
+
+                String password;
+                Optional<String> result = dialog.showAndWait();
+                if (result.isPresent()){
+                    password = result.get();
+
+                    if (password.length() != 0){
+                        PMStorage pmStorage = PMSerialize.deserialize(file.getAbsolutePath());
+
+                        if (password.equals(pmStorage.password)){
+
+                            String twofa = pmStorage.twofa;
+
+                            TextInputDialog textdialog = new TextInputDialog();
+                            textdialog.setTitle("2FA");
+                            textdialog.setHeaderText("Input your 2FA code");
+                            textdialog.setContentText("2FA code:");
+
+                            while (true){
+                                String code;
+                                Optional<String> textresult = textdialog.showAndWait();
+                                if (textresult.isPresent()){
+                                    code = result.get();
+                                    if(code.equals(TwoFactorAuthentication.getTOTPCode(twofa))){
+                                        break;
+                                    }else {
+                                        sendAlert(Alert.AlertType.WARNING,
+                                                "Warning",
+                                                "Error 2FA code! please input again!");
+                                    }
+                                }
+                            }
+
+                            this.currentStorage = pmStorage;
+                            updatePasswordPane(pmStorage);
+                        }else {
+                            sendAlert(Alert.AlertType.WARNING,
+                                    "Warning",
+                                    "Error Password!");
+                        }
+                    }else {
+                        sendAlert(Alert.AlertType.ERROR,
+                                "Error",
+                                "Empty password!");
+                    }
+                }else {
+                    sendAlert(Alert.AlertType.ERROR,
+                            "Error",
+                            "You must enter password!");
+                }
+
+            } catch (FileNotFoundException e) {
+                sendAlert(Alert.AlertType.ERROR,
+                "File error",
+                "Not one legal password vault file!");
+            }
+        }
+    }
+
+    public void export(MouseEvent mouseEvent) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File dir = directoryChooser.showDialog(null);
+
+        if (dir != null){
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Vault name");
+            dialog.setHeaderText("Input your vault name");
+            dialog.setContentText("Name:");
+
+            String name;
+            Optional<String> result = dialog.showAndWait();
+
+            if (result.isPresent()){
+                name = result.get();
+                if (name.length() != 0){
+                    try{
+                        PMSerialize.serialize(this.currentStorage,
+                                dir.getAbsolutePath()+ File.separator + name);
+
+                        sendAlert(Alert.AlertType.INFORMATION,
+                                "Successful",
+                                "Successfully exported!");
+                    } catch (FileNotFoundException e) {
+                        sendAlert(Alert.AlertType.ERROR,
+                                "Export error",
+                                "Unknown error");
+                    }
+                }else {
+                    sendAlert(Alert.AlertType.WARNING,
+                            "Filename error",
+                            "Empty name");
+                }
+            }else {
+                sendAlert(Alert.AlertType.WARNING,
+                        "Warning",
+                        "You need input name!");
+            }
+        }
+    }
+
+    public void switchLock(MouseEvent mouseEvent) {
+
+    }
+
+    private void updatePasswordPane(PMStorage pmStorage){
+        //TODO add function
+
+    }
+
+    private void saveTohome(){
+
+    }
+
+    private void sendAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

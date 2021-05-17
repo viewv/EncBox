@@ -1,8 +1,6 @@
 package symmetrictest;
 
 import top.viewv.model.mac.SHA;
-// import top.viewv.model.symmetric.Encrypt;
-// import top.viewv.model.symmetric.EncryptProgress;
 import top.viewv.model.tools.Base64Tool;
 import top.viewv.model.tools.GenerateSecKey;
 
