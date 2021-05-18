@@ -2,9 +2,11 @@ package top.viewv.controller;
 
 import com.jfoenix.controls.*;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -35,9 +37,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MainController implements Initializable{
 
@@ -174,6 +174,12 @@ public class MainController implements Initializable{
 
         Security.addProvider(new BouncyCastleProvider());
 
+        try {
+            this.currentStorage = PMSerialize.deserialize("vault.ser");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         paneAsymmetric.setVisible(false);
         paneMainfunction.setVisible(true);
         panePassword.setVisible(false);
@@ -234,8 +240,11 @@ public class MainController implements Initializable{
                 chkSpecial.setDisable(true);
 
                 cboxAlgo.getSelectionModel().selectFirst();
+            }else {
+                if (currentStorage.passwords.containsKey(filename)){
+                    textPassword.setText(currentStorage.passwords.get(filename));
+                }
             }
-
         } else {
             labFileAlert.setText("Error Please Choose the right file");
         }
@@ -450,7 +459,8 @@ public class MainController implements Initializable{
             SecretKey secretKey = GenerateSecKey.generateKey(password, length, 65566,
                     1, "AES");
 
-            String destfile = destFilepath + File.separator + sourceFilename.substring(0, sourceFilename.lastIndexOf(".")) + ".enc";
+            String destfilename = sourceFilename.substring(0, sourceFilename.lastIndexOf(".")) + ".enc";
+            String destfile = destFilepath + File.separator + destfilename;
 
             final byte[][] associatedBytes = {new byte[0]};
 
@@ -507,6 +517,12 @@ public class MainController implements Initializable{
 
             new Thread(encryptTask).start();
 
+            currentStorage.passwords.put(destfilename,password);
+            try {
+                PMSerialize.serialize(currentStorage,"vault.ser");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         } else {
             DecryptTask decryptTask = new DecryptTask();
             decryptTask.setValue(sourceFile,sourceFileLength,destFilepath,password);
@@ -581,6 +597,8 @@ public class MainController implements Initializable{
 
         panePassword.setDisable(false);
         panePassword.setVisible(true);
+
+        updatePasswordPane(currentStorage);
     }
 
     public void onClickedSavetofile() {
@@ -909,6 +927,9 @@ public class MainController implements Initializable{
         }
     }
 
+    public void setting(MouseEvent mouseEvent) {
+    }
+
     public void export(MouseEvent mouseEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File dir = directoryChooser.showDialog(null);
@@ -950,17 +971,48 @@ public class MainController implements Initializable{
         }
     }
 
-    public void switchLock(MouseEvent mouseEvent) {
-
-    }
-
     private void updatePasswordPane(PMStorage pmStorage){
-        //TODO add function
+        itemContainer.getChildren().clear();
+        Map<String,String> map = pmStorage.passwords;
 
+        try {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                Node node;
+                FXMLLoader loader = new
+                        FXMLLoader(Objects.requireNonNull(getClass()).getClassLoader()
+                        .getResource("ui/Item.fxml"));
+                node = loader.load();
+                ItemController itemController = loader.getController();
+
+                String filename = entry.getKey();
+                String password = entry.getValue();
+                itemController.setFilename(filename);
+                itemController.setPassword(password);
+                itemController.setMainController(this);
+                itemContainer.getChildren().add(node);
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void saveTohome(){
+    public void deletePassword(String filename){
+        currentStorage.passwords.remove(filename);
+        try {
+            PMSerialize.serialize(currentStorage,"vault.ser");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        updatePasswordPane(currentStorage);
+    }
 
+    public void modifyPassword(String filename, String password){
+        currentStorage.passwords.put(filename,password);
+        try {
+            PMSerialize.serialize(currentStorage,"vault.ser");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendAlert(Alert.AlertType type, String title, String content) {
