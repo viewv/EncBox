@@ -530,9 +530,7 @@ public class MainController implements Initializable{
             pbarProcess.progressProperty().bind(decryptTask.progressProperty());
 
             decryptTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    event -> {
-                        System.out.println("Dec success!");
-                    });
+                    event -> System.out.println("Dec success!"));
 
             new Thread(decryptTask).start();
         }
@@ -928,6 +926,53 @@ public class MainController implements Initializable{
     }
 
     public void setting(MouseEvent mouseEvent) {
+        String password;
+
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Modify");
+        dialog.setHeaderText("Modify Main Password");
+
+        ButtonType buttonType = new ButtonType("Modify", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(buttonType, ButtonType.CANCEL);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 20, 10, 10));
+
+        PasswordField pwd = new PasswordField();
+        pwd.setPromptText("password");
+
+        gridPane.add(new Label("Password:"), 0, 0);
+        gridPane.add(pwd, 1, 0);
+
+        dialog.getDialogPane().setContent(gridPane);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == buttonType) {
+                return pwd.getText();
+            }
+            return null;
+        });
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()){
+            password = result.get();
+
+            if (password.length() != 0){
+                currentStorage.password = password;
+                try {
+                    PMSerialize.serialize(currentStorage,"vault.ser");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                sendAlert(Alert.AlertType.WARNING,
+                        "Warning",
+                        "Empty Password");
+            }
+        }
     }
 
     public void export(MouseEvent mouseEvent) {
