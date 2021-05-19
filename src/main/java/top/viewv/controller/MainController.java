@@ -1025,7 +1025,7 @@ public class MainController implements Initializable{
                 Node node;
                 FXMLLoader loader = new
                         FXMLLoader(Objects.requireNonNull(getClass()).getClassLoader()
-                        .getResource("ui/Item.fxml"));
+                        .getResource("data/ui/Item.fxml"));
                 node = loader.load();
                 ItemController itemController = loader.getController();
 
